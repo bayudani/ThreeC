@@ -31,6 +31,12 @@
             'icon' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>',
             'active' => str_contains($route ?? '', 'laporan') && !str_contains($route ?? '', 'evaluasi'),
         ],
+        'Pengumuman' => [
+            'route' => 'admin.pengumuman',
+            'icon' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h5m5 0h5a2 2 0 002-2V7a2 2 0 00-2-2h-5m0 0L9 5m5 0l-5 0"></path></svg>',
+            'active' => str_contains($route ?? '', 'pengumuman'),
+            'admin_only' => true,
+        ],
     ];
 
     $userLabel = $isAdmin ? 'Admin Kampus' : 'Admin Ormawa';
@@ -44,7 +50,7 @@
     <div class="h-16 flex items-center gap-2.5 px-5 border-b border-slate-100 shrink-0">
         <img src="{{ asset('images/logo.png') }}" alt="Three-C" class="h-9 w-9 object-contain">
         <div>
-            <h1 class="text-lg font-extrabold text-blue-700 leading-tight">Three<span class="text-slate-800">C</span></h1>
+            <h1 class="text-lg font-extrabold text-blue-700 leading-tight">Three<span class="text-slate-800"> - C</span></h1>
             <p class="text-[10px] font-medium text-slate-400 leading-tight -mt-0.5">Cakra Control Center</p>
         </div>
     </div>

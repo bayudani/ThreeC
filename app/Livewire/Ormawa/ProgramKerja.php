@@ -2,124 +2,132 @@
 
 namespace App\Livewire\Ormawa;
 
-use App\Models\Proker;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Rule;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Proker;
+use App\Models\Dokumentasi;
 
 #[Layout('layouts.app')]
 class ProgramKerja extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     public $search = '';
-    public $filterStatus = '';
 
-    public $showForm = false;
-    public $editId = null;
-    public $nama_proker;
-    public $deskripsi;
-    public $target_waktu;
-    public $status = 'belum_dimulai';
+    // State untuk Modal Update Progress
+    public $isProgressModalOpen = false;
+    public $proker_id;
     public $progress = 0;
+    public $status = 'belum_dimulai';
 
-    protected function rules()
-    {
-        return [
-            'nama_proker' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'target_waktu' => 'required|date',
-            'status' => 'required|in:belum_dimulai,berjalan,selesai',
-            'progress' => 'required|integer|min:0|max:100',
-        ];
-    }
+    // State untuk Modal Upload Dokumentasi
+    public $isDokumenModalOpen = false;
+    
+    #[Rule('required|file|mimes:jpg,jpeg,png,pdf|max:2048', message: 'File harus berupa JPG/PNG/PDF maksimal 2MB.')]
+    public $file_bukti;
+    
+    #[Rule('required|string|max:255', message: 'Keterangan wajib diisi.')]
+    public $keterangan_file;
 
-    public function updatingSearch() { $this->resetPage(); }
-
-    public function resetForm()
-    {
-        $this->showForm = false;
-        $this->editId = null;
-        $this->nama_proker = null;
-        $this->deskripsi = null;
-        $this->target_waktu = null;
-        $this->status = 'belum_dimulai';
-        $this->progress = 0;
-        $this->resetErrorBag();
-    }
-
-    public function create()
-    {
-        $this->resetForm();
-        $this->showForm = true;
-    }
-
-    public function edit($id)
+    // ==========================================
+    // LOGIKA PROGRESS
+    // ==========================================
+    public function openProgressModal($id)
     {
         $proker = Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($id);
-        $this->editId = $proker->id;
-        $this->nama_proker = $proker->nama_proker;
-        $this->deskripsi = $proker->deskripsi;
-        $this->target_waktu = $proker->target_waktu->format('Y-m-d');
-        $this->status = $proker->status;
+        $this->proker_id = $proker->id;
         $this->progress = $proker->progress;
-        $this->showForm = true;
+        $this->status = $proker->status;
+        $this->isProgressModalOpen = true;
     }
 
-    public function save()
+    public function closeProgressModal()
     {
-        $this->validate();
-        $ormawaId = Auth::user()->ormawa_id;
-
-        if ($this->editId) {
-            $proker = Proker::where('ormawa_id', $ormawaId)->findOrFail($this->editId);
-            $proker->update([
-                'nama_proker' => $this->nama_proker,
-                'deskripsi' => $this->deskripsi,
-                'target_waktu' => $this->target_waktu,
-                'status' => $this->status,
-                'progress' => $this->progress,
-            ]);
-        } else {
-            Proker::create([
-                'ormawa_id' => $ormawaId,
-                'nama_proker' => $this->nama_proker,
-                'deskripsi' => $this->deskripsi,
-                'target_waktu' => $this->target_waktu,
-                'status' => $this->status,
-                'progress' => $this->progress,
-            ]);
-        }
-
-        $this->resetForm();
-        session()->flash('success', $this->editId ? 'Proker berhasil diperbarui.' : 'Proker berhasil ditambahkan.');
+        $this->isProgressModalOpen = false;
+        $this->reset(['proker_id', 'progress', 'status']);
     }
 
-    public function delete($id)
+    public function updateProgress()
     {
-        Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($id)->delete();
-        session()->flash('success', 'Proker berhasil dihapus.');
+        $this->validate([
+            'progress' => 'required|numeric|min:0|max:100',
+            'status' => 'required|in:belum_dimulai,berjalan,selesai'
+        ]);
+
+        $proker = Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($this->proker_id);
+        
+        // Auto-adjust status berdasarkan progress (opsional UX)
+        if ($this->progress == 100) $this->status = 'selesai';
+        if ($this->progress > 0 && $this->progress < 100 && $this->status == 'belum_dimulai') $this->status = 'berjalan';
+
+        $proker->update([
+            'progress' => $this->progress,
+            'status' => $this->status
+        ]);
+
+        $this->closeProgressModal();
+        session()->flash('success', 'Progress program kerja berhasil diperbarui!');
+    }
+
+    // ==========================================
+    // LOGIKA UPLOAD DOKUMENTASI
+    // ==========================================
+    public function openDokumenModal($id)
+    {
+        $proker = Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($id);
+        $this->proker_id = $proker->id;
+        $this->isDokumenModalOpen = true;
+    }
+
+    public function closeDokumenModal()
+    {
+        $this->isDokumenModalOpen = false;
+        $this->resetValidation();
+        $this->reset(['proker_id', 'file_bukti', 'keterangan_file']);
+    }
+
+    public function uploadDokumen()
+    {
+        $this->validateOnly('file_bukti');
+        $this->validateOnly('keterangan_file');
+
+        // Simpan file ke folder storage/app/public/dokumentasi
+        $path = $this->file_bukti->store('dokumentasi', 'public');
+
+        Dokumentasi::create([
+            'proker_id' => $this->proker_id,
+            'file_path' => $path,
+            'keterangan' => $this->keterangan_file
+        ]);
+
+        $this->closeDokumenModal();
+        session()->flash('success', 'Bukti kegiatan berhasil diunggah!');
+    }
+
+    // ==========================================
+    // RENDER VIEW
+    // ==========================================
+    public function updatingSearch()
+    {
+        $this->resetPage();
     }
 
     public function render()
     {
-        $ormawaId = Auth::user()->ormawa_id;
-
-        $prokers = Proker::where('ormawa_id', $ormawaId)
-            ->withCount('dokumentasis')
-            ->when($this->search, fn($q) => $q->where('nama_proker', 'like', "%{$this->search}%"))
-            ->when($this->filterStatus, fn($q) => $q->where('status', $this->filterStatus))
+        $prokers = Proker::with('dokumentasis') // Eager load relasi dokumentasi
+            ->where('ormawa_id', Auth::user()->ormawa_id)
+            ->when($this->search, function($query) {
+                $query->where('nama_proker', 'like', '%'.$this->search.'%');
+            })
             ->latest()
             ->paginate(10);
 
-        $stats = [
-            'total' => Proker::where('ormawa_id', $ormawaId)->count(),
-            'selesai' => Proker::where('ormawa_id', $ormawaId)->where('status', 'selesai')->count(),
-            'berjalan' => Proker::where('ormawa_id', $ormawaId)->where('status', 'berjalan')->count(),
-            'belum' => Proker::where('ormawa_id', $ormawaId)->where('status', 'belum_dimulai')->count(),
-        ];
-
-        return view('livewire.ormawa.program-kerja', compact('prokers', 'stats'));
+        return view('livewire.ormawa.program-kerja', [
+            'prokers' => $prokers
+        ]);
     }
 }

@@ -8,10 +8,12 @@ use App\Livewire\Admin\ProgramKerja;
 use App\Livewire\Admin\ProkerDetail;
 use App\Livewire\Admin\Laporan;
 use App\Livewire\Admin\Evaluasi;
+use App\Livewire\Admin\ManajemenPengumuman;
 use App\Http\Controllers\Admin\LaporanExportController;
 use App\Livewire\Ormawa\Dashboard as OrmawaDashboard;
 use App\Livewire\Ormawa\ProgramKerja as OrmawaProgramKerja;
 use App\Livewire\Ormawa\Laporan as OrmawaLaporan;
+use App\Livewire\Ormawa\DetailProker as OrmawaDetailProker;
 use App\Livewire\Profile as ProfilePage;
 
 Route::view('/', 'welcome');
@@ -42,6 +44,7 @@ Route::prefix('admin')
         Route::get('/laporan', Laporan::class)->name('admin.laporan');
         Route::get('/evaluasi', Evaluasi::class)->name('admin.evaluasi');
         Route::get('/laporan/export', [LaporanExportController::class, 'export'])->name('admin.laporan.export');
+        Route::get('/pengumuman', ManajemenPengumuman::class)->name('admin.pengumuman');
 });
 
 // ==========================================
@@ -53,6 +56,7 @@ Route::prefix('ormawa')
         Route::get('/dashboard', OrmawaDashboard::class)->name('ormawa.dashboard');
         Route::get('/proker', OrmawaProgramKerja::class)->name('ormawa.proker');
         Route::get('/laporan', OrmawaLaporan::class)->name('ormawa.laporan');
+        Route::get('/proker/{id}', OrmawaDetailProker::class)->name('ormawa.proker.detail');
 });
 
 require __DIR__.'/auth.php';

@@ -24,18 +24,18 @@
                 </div>
             </div>
 
-            <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 bg-[#F8FAFC]">
+            <div class="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12 bg-[#F8FAFC]">
                 <div class="w-full max-w-md">
-                    <div class="text-center mb-8 lg:hidden">
-                        <img src="{{ asset('images/logo.png') }}" alt="Three-C" class="h-16 mx-auto">
-                        <h1 class="text-2xl font-extrabold text-blue-700 mt-3">Three<span class="text-slate-800">C</span></h1>
-                        <p class="text-sm text-slate-500 mt-1">Cakra Control Center</p>
+                    <div class="text-center mb-6 sm:mb-8 lg:hidden">
+                        <img src="{{ asset('images/logo.png') }}" alt="Three-C" class="h-14 sm:h-16 mx-auto">
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-blue-700 mt-2 sm:mt-3">Three<span class="text-slate-800">C</span></h1>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1">Cakra Control Center</p>
                     </div>
 
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-                        <div class="mb-6">
-                            <h2 class="text-xl font-bold text-slate-800">Selamat Datang</h2>
-                            <p class="text-sm text-slate-500 mt-1">Silakan masuk ke akun Anda</p>
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+                        <div class="mb-5 sm:mb-6">
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-800">Selamat Datang</h2>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-1">Silakan masuk ke akun Anda</p>
                         </div>
                         {{ $slot }}
                     </div>
