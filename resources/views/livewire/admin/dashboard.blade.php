@@ -94,7 +94,7 @@
                             @php
                                 $count = $chartData[$i];
                                 $pct = $maxData > 0 ? ($count / $maxData) * 100 : 0;
-                                $colors = ['BEM' => 'bg-blue-500', 'DPM' => 'bg-indigo-500', 'HIMA' => 'bg-emerald-500', 'UKM' => 'bg-amber-500', 'MPM' => 'bg-purple-500'];
+                                $colors = ['Legislatif' => 'bg-purple-500', 'Eksekutif' => 'bg-blue-500', 'UKM' => 'bg-amber-500'];
                                 $barColor = $colors[$cat] ?? 'bg-slate-500';
                             @endphp
                             <div>

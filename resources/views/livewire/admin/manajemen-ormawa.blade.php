@@ -22,16 +22,16 @@
             <h3 class="text-3xl font-bold text-blue-700 mt-2">{{ $stats['total'] }}</h3>
         </div>
         <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Himpunan (HIMA)</p>
-            <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ $stats['hima'] }}</h3>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Legislatif</p>
+            <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ $stats['legislatif'] }}</h3>
         </div>
         <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">UKM Aktif</p>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Eksekutif</p>
+            <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ $stats['eksekutif'] }}</h3>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">UKM</p>
             <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ $stats['ukm'] }}</h3>
-        </div>
-        <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">BEM / DPM / MPM</p>
-            <h3 class="text-3xl font-bold text-slate-800 mt-2">{{ $stats['bem_dpm'] }}</h3>
         </div>
     </div>
 
@@ -40,14 +40,14 @@
             <button wire:click="setKategori('')" class="px-4 py-1.5 text-sm font-medium rounded-full border transition-colors {{ $filterKategori === '' ? 'bg-blue-700 border-blue-700 text-white' : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50' }}">
                 Semua
             </button>
-            <button wire:click="setKategori('HIMA')" class="px-4 py-1.5 text-sm font-medium rounded-full border transition-colors {{ $filterKategori === 'HIMA' ? 'bg-blue-700 border-blue-700 text-white' : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50' }}">
-                HIMA
+            <button wire:click="setKategori('Legislatif')" class="px-4 py-1.5 text-sm font-medium rounded-full border transition-colors {{ $filterKategori === 'Legislatif' ? 'bg-blue-700 border-blue-700 text-white' : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50' }}">
+                Legislatif
+            </button>
+            <button wire:click="setKategori('Eksekutif')" class="px-4 py-1.5 text-sm font-medium rounded-full border transition-colors {{ $filterKategori === 'Eksekutif' ? 'bg-blue-700 border-blue-700 text-white' : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50' }}">
+                Eksekutif
             </button>
             <button wire:click="setKategori('UKM')" class="px-4 py-1.5 text-sm font-medium rounded-full border transition-colors {{ $filterKategori === 'UKM' ? 'bg-blue-700 border-blue-700 text-white' : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50' }}">
                 UKM
-            </button>
-            <button wire:click="setKategori('BEM')" class="px-4 py-1.5 text-sm font-medium rounded-full border transition-colors {{ $filterKategori === 'BEM' ? 'bg-blue-700 border-blue-700 text-white' : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50' }}">
-                BEM / DPM
             </button>
         </div>
 
@@ -197,11 +197,9 @@
                         <label class="block text-sm font-medium text-slate-700 mb-1">Kategori</label>
                         <select wire:model="kategori" class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
                             <option value="">Pilih kategori</option>
-                            <option value="BEM">BEM</option>
-                            <option value="DPM">DPM</option>
-                            <option value="HIMA">HIMA</option>
+                            <option value="Legislatif">Legislatif</option>
+                            <option value="Eksekutif">Eksekutif</option>
                             <option value="UKM">UKM</option>
-                            <option value="MPM">MPM</option>
                         </select>
                         @error('kategori') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>

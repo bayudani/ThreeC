@@ -10,6 +10,7 @@ class Login extends Component
 {
     public $login_id; // Bisa berupa email atau username
     public $password;
+    public $remember = false;
 
     public function authenticate()
     {
@@ -21,7 +22,7 @@ class Login extends Component
         // Cek apakah input berupa email atau username
         $fieldType = filter_var($this->login_id, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        if (Auth::attempt([$fieldType => $this->login_id, 'password' => $this->password])) {
+        if (Auth::attempt([$fieldType => $this->login_id, 'password' => $this->password], $this->remember)) {
             session()->regenerate();
 
             // Redirect berdasarkan role

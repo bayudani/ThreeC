@@ -37,6 +37,11 @@
             @enderror
         </div>
 
+        <div class="flex items-center">
+            <input wire:model="remember" id="remember" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+            <label for="remember" class="ml-2 text-sm text-slate-600">Ingat saya</label>
+        </div>
+
         <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm font-bold rounded-lg transition-all shadow-md shadow-blue-200">
             Masuk
         </button>

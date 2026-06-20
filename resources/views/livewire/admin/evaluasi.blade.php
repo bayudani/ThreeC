@@ -99,7 +99,7 @@
                         <td class="px-4 py-3 font-semibold text-slate-800">{{ $o->nama }}</td>
                         <td class="px-4 py-3">
                             <span class="px-2 py-0.5 text-[10px] font-bold rounded
-                                {{ match($o->kategori) { 'BEM' => 'bg-blue-50 text-blue-700', 'DPM' => 'bg-indigo-50 text-indigo-700', 'HIMA' => 'bg-emerald-50 text-emerald-700', 'UKM' => 'bg-amber-50 text-amber-700', 'MPM' => 'bg-purple-50 text-purple-700', default => 'bg-slate-50 text-slate-700' } }}">
+                                {{ match($o->kategori) { 'Legislatif' => 'bg-purple-50 text-purple-700', 'Eksekutif' => 'bg-blue-50 text-blue-700', 'UKM' => 'bg-amber-50 text-amber-700', default => 'bg-slate-50 text-slate-700' } }}">
                                 {{ $o->kategori }}
                             </span>
                         </td>

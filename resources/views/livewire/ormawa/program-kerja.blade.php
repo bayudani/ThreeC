@@ -1,74 +1,125 @@
-<div class="max-w-7xl mx-auto space-y-6">
-    
+<div class="space-y-8">
     @if (session()->has('success'))
-        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 border border-green-200 shadow-sm flex items-center gap-2">
-            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span class="font-bold">Berhasil!</span> {{ session('success') }}
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show" x-transition.duration.300ms class="fixed top-4 right-4 z-50 max-w-sm bg-white rounded-2xl shadow-lg border border-success-100 p-4 flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-success-50 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-slate-800">Berhasil!</p>
+                <p class="text-xs text-slate-500 mt-0.5">{{ session('success') }}</p>
+            </div>
+            <button @click="show = false" class="text-slate-400 hover:text-slate-600 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
         </div>
     @endif
 
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h2 class="text-2xl font-bold text-slate-800">Manajemen Program Kerja</h2>
-            <p class="text-sm text-slate-500">Kelola progres dan unggah bukti laporan kegiatan ormawa Anda.</p>
+            <h2 class="text-3xl font-bold text-navy-800 tracking-tight">Manajemen Program Kerja</h2>
+            <p class="text-sm text-slate-500 mt-1">Kelola progres dan unggah bukti laporan kegiatan ormawa Anda.</p>
         </div>
-        
         <div class="relative w-full md:w-72">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
-            <input wire:model.live.debounce.300ms="search" type="text" class="bg-white border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-9 p-2.5 shadow-sm" placeholder="Cari program kerja...">
+            <input wire:model.live.debounce.300ms="search" type="text" class="bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 block w-full pl-10 p-2.5 transition-all" placeholder="Cari program kerja...">
+            @if($search)
+                <button wire:click="$set('search', '')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            @endif
         </div>
     </div>
 
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-shadow duration-200">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Proker</p>
+                    <p class="text-2xl font-extrabold text-navy-800 mt-0.5">{{ $stats['total'] }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-shadow duration-200">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-success-50 text-success-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Selesai</p>
+                    <p class="text-2xl font-extrabold text-success-600 mt-0.5">{{ $stats['selesai'] }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-shadow duration-200">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Berjalan</p>
+                    <p class="text-2xl font-extrabold text-amber-600 mt-0.5">{{ $stats['berjalan'] }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-slate-600">
-                <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
-                    <tr>
-                        <th scope="col" class="px-6 py-4 font-semibold w-1/3">Nama Program</th>
-                        <th scope="col" class="px-6 py-4 font-semibold text-center">Status</th>
-                        <th scope="col" class="px-6 py-4 font-semibold w-48">Progress</th>
-                        <th scope="col" class="px-6 py-4 font-semibold text-center">Bukti Laporan</th>
-                        <th scope="col" class="px-6 py-4 text-right font-semibold">Aksi</th>
+            <table class="w-full text-sm text-left">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200">
+                        <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-[35%]">Nama Program</th>
+                        <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Status</th>
+                        <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-56">Progress</th>
+                        <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Bukti Laporan</th>
+                        <th scope="col" class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100">
                     @forelse($prokers as $proker)
                         @php
-                            $statusColor = match($proker->status) {
-                                'selesai' => ['badge' => 'bg-green-100 text-green-700', 'bar' => 'bg-green-500'],
-                                'berjalan' => ['badge' => 'bg-blue-100 text-blue-700', 'bar' => 'bg-blue-600'],
-                                default => ['badge' => 'bg-slate-100 text-slate-600', 'bar' => 'bg-slate-400'],
+                            $colors = match($proker->status) {
+                                'selesai' => ['dot' => 'bg-success-500', 'badge' => 'bg-success-50 text-success-700', 'bar' => 'bg-success-500'],
+                                'berjalan' => ['dot' => 'bg-primary-500', 'badge' => 'bg-primary-50 text-primary-700', 'bar' => 'bg-primary-600'],
+                                default => ['dot' => 'bg-slate-400', 'badge' => 'bg-slate-100 text-slate-600', 'bar' => 'bg-slate-400'],
                             };
-                            $statusText = match($proker->status) {
+                            $label = match($proker->status) {
                                 'selesai' => 'Selesai',
                                 'berjalan' => 'Berjalan',
                                 default => 'Belum Dimulai',
                             };
                             $docCount = $proker->dokumentasis->count();
                         @endphp
-                        <tr class="bg-white border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-4">
-                                <p class="font-bold text-slate-800">{{ $proker->nama_proker }}</p>
-                                <p class="text-xs text-slate-500 mt-1">Target: {{ \Carbon\Carbon::parse($proker->target_waktu)->translatedFormat('d M Y') }}</p>
+                        <tr class="hover:bg-slate-50/80 transition-colors duration-150">
+                            <td class="px-6 py-4.5">
+                                <p class="font-semibold text-navy-800">{{ $proker->nama_proker }}</p>
+                                <p class="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    Target: {{ \Carbon\Carbon::parse($proker->target_waktu)->translatedFormat('d M Y') }}
+                                </p>
                             </td>
-                            <td class="px-6 py-4 text-center">
-                                <span class="px-3 py-1 text-[11px] font-bold rounded-full {{ $statusColor['badge'] }}">
-                                    {{ $statusText }}
+                            <td class="px-6 py-4.5 text-center">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold rounded-lg {{ $colors['badge'] }}">
+                                    <span class="w-1.5 h-1.5 rounded-full {{ $colors['dot'] }}"></span>
+                                    {{ $label }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4.5">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-100 rounded-full h-2">
-                                        <div class="{{ $statusColor['bar'] }} h-2 rounded-full" style="width: {{ $proker->progress }}%"></div>
+                                    <div class="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
+                                        <div class="{{ $colors['bar'] }} h-2 rounded-full transition-all duration-500" style="width: {{ $proker->progress }}%"></div>
                                     </div>
-                                    <span class="text-xs font-bold text-slate-700 min-w-[2rem] text-right">{{ $proker->progress }}%</span>
+                                    <span class="text-xs font-bold text-navy-700 min-w-[2.5rem] text-right tabular-nums">{{ $proker->progress }}%</span>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-center">
+                            <td class="px-6 py-4.5 text-center">
                                 @if($docCount > 0)
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 text-xs font-semibold">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-[11px] font-bold">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                         {{ $docCount }} File
                                     </span>
@@ -76,17 +127,33 @@
                                     <span class="text-xs text-slate-400 italic">Belum ada</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-right">
-                                <a href="{{ route('ormawa.proker.detail', $proker->id) }}" class="px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white text-sm font-semibold rounded-lg transition-colors inline-block">
-                                    Kelola Detail
-                                </a>
+                            <td class="px-6 py-4.5 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <button wire:click="openProgressModal({{ $proker->id }})" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-50 hover:bg-primary-50 text-slate-600 hover:text-primary-600 text-xs font-semibold rounded-xl border border-slate-200 hover:border-primary-200 transition-all duration-150">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                        Progress
+                                    </button>
+                                    <button wire:click="openDokumenModal({{ $proker->id }})" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-50 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 text-xs font-semibold rounded-xl border border-slate-200 hover:border-indigo-200 transition-all duration-150">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                        Upload
+                                    </button>
+                                    <a href="{{ route('ormawa.proker.detail', $proker->id) }}" class="inline-flex items-center gap-1.5 px-3 py-2 bg-navy-800 hover:bg-navy-700 text-white text-xs font-semibold rounded-xl transition-all duration-150 shadow-sm hover:shadow-md">
+                                        Kelola
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-slate-500">
-                                <p class="font-medium">Belum ada program kerja yang didaftarkan.</p>
-                                <p class="text-sm mt-1">Gunakan Dashboard untuk menambah proker baru.</p>
+                            <td colspan="5" class="px-6 py-16 text-center">
+                                <div class="max-w-xs mx-auto">
+                                    <div class="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                        <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                                    </div>
+                                    <h4 class="text-base font-semibold text-navy-800 mb-1">Belum ada program kerja</h4>
+                                    <p class="text-sm text-slate-400 leading-relaxed">Gunakan dashboard untuk menambah program kerja baru agar dapat dikelola di sini.</p>
+                                </div>
                             </td>
                         </tr>
                     @endforelse
@@ -94,45 +161,67 @@
             </table>
         </div>
     </div>
-    
-    <div class="mt-4">
-        {{ $prokers->links(data: ['scrollTo' => false]) }}
-    </div>
 
+    @if($prokers->hasPages())
+        <div class="flex items-center justify-between">
+            <p class="text-sm text-slate-500">
+                Menampilkan {{ $prokers->firstItem() }}-{{ $prokers->lastItem() }} dari {{ $prokers->total() }} program
+            </p>
+            <div class="flex items-center gap-1.5">
+                @if($prokers->onFirstPage())
+                    <span class="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 rounded-lg border border-slate-200 cursor-default">Sebelumnya</span>
+                @else
+                    <button wire:click="previousPage" class="px-3 py-1.5 text-xs font-medium text-slate-600 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all">Sebelumnya</button>
+                @endif
+                @foreach($prokers->getUrlRange(max(1, $prokers->currentPage() - 2), min($prokers->lastPage(), $prokers->currentPage() + 2)) as $page => $url)
+                    <button wire:click="gotoPage({{ $page }})" class="px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all {{ $page === $prokers->currentPage() ? 'bg-navy-800 border-navy-800 text-white shadow-sm' : 'text-slate-600 bg-white border-slate-200 hover:bg-slate-50' }}">{{ $page }}</button>
+                @endforeach
+                @if($prokers->hasMorePages())
+                    <button wire:click="nextPage" class="px-3 py-1.5 text-xs font-medium text-slate-600 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all">Selanjutnya</button>
+                @else
+                    <span class="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 rounded-lg border border-slate-200 cursor-default">Selanjutnya</span>
+                @endif
+            </div>
+        </div>
+    @endif
+
+    {{-- Modal Update Progress --}}
     @if($isProgressModalOpen)
-        <div class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-slate-900/50 backdrop-blur-sm p-4">
-            <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden" @click.away="$wire.closeProgressModal()">
-                
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                    <h3 class="text-lg font-bold text-slate-800">Update Progress</h3>
-                    <button wire:click="closeProgressModal" class="text-slate-400 hover:text-red-500 transition-colors">
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/40 backdrop-blur-sm" wire:key="progress-modal">
+            <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100" @click.away="$wire.closeProgressModal()">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                    <h3 class="text-lg font-bold text-navy-800">Update Progress</h3>
+                    <button wire:click="closeProgressModal" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-danger-500 hover:bg-red-50 transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-
-                <form wire:submit.prevent="updateProgress" class="p-6 space-y-4">
-                    
+                <form wire:submit.prevent="updateProgress" class="p-6 space-y-6">
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700">Persentase Selesai: <span class="text-blue-600">{{ $progress }}%</span></label>
-                        <input wire:model.live="progress" type="range" min="0" max="100" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
-                        @error('progress') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        <label class="block mb-3 text-sm font-semibold text-slate-700">
+                            Persentase Penyelesaian: <span class="text-primary-600">{{ $progress }}%</span>
+                        </label>
+                        <input wire:model.live="progress" type="range" min="0" max="100" class="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer accent-primary-600">
+                        <div class="flex justify-between text-xs text-slate-400 mt-1.5">
+                            <span>0%</span>
+                            <span>50%</span>
+                            <span>100%</span>
+                        </div>
+                        @error('progress') <span class="text-danger-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
                     </div>
-
-                    <div class="mt-4">
+                    <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700">Status Saat Ini</label>
-                        <select wire:model="status" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <select wire:model="status" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 block w-full p-2.5 transition-all">
                             <option value="belum_dimulai">Belum Dimulai</option>
                             <option value="berjalan">Sedang Berjalan</option>
                             <option value="selesai">Selesai</option>
                         </select>
-                        @error('status') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        @error('status') <span class="text-danger-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
                     </div>
-
-                    <div class="flex items-center justify-end gap-3 pt-4 mt-6 border-t border-slate-100">
-                        <button type="button" wire:click="closeProgressModal" class="px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                    <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                        <button type="button" wire:click="closeProgressModal" class="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all">
                             Batal
                         </button>
-                        <button type="submit" class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+                        <button type="submit" class="px-5 py-2.5 text-sm font-semibold text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-all shadow-sm hover:shadow-md active:scale-[0.98]">
                             Simpan Perubahan
                         </button>
                     </div>
@@ -141,41 +230,43 @@
         </div>
     @endif
 
+    {{-- Modal Upload Dokumen --}}
     @if($isDokumenModalOpen)
-        <div class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-slate-900/50 backdrop-blur-sm p-4">
-            <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden" @click.away="$wire.closeDokumenModal()">
-                
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                    <h3 class="text-lg font-bold text-slate-800">Upload Bukti Laporan</h3>
-                    <button wire:click="closeDokumenModal" class="text-slate-400 hover:text-red-500 transition-colors">
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/40 backdrop-blur-sm" wire:key="dokumen-modal">
+            <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100" @click.away="$wire.closeDokumenModal()">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                    <h3 class="text-lg font-bold text-navy-800">Upload Bukti Laporan</h3>
+                    <button wire:click="closeDokumenModal" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-danger-500 hover:bg-red-50 transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-
-                <form wire:submit.prevent="uploadDokumen" class="p-6 space-y-4">
-                    
+                <form wire:submit.prevent="uploadDokumen" class="p-6 space-y-5">
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700">Keterangan / Deskripsi File</label>
-                        <input wire:model="keterangan_file" type="text" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Contoh: Laporan LPJ Seminar atau Foto Kegiatan">
-                        @error('keterangan_file') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        <input wire:model="keterangan_file" type="text" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 block w-full p-2.5 transition-all" placeholder="Contoh: Laporan LPJ Seminar">
+                        @error('keterangan_file') <span class="text-danger-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
                     </div>
-
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700">Pilih File (JPG/PNG/PDF, Max 2MB)</label>
-                        <input wire:model="file_bukti" type="file" class="block w-full text-sm text-slate-900 border border-slate-300 rounded-lg cursor-pointer bg-slate-50 focus:outline-none p-2.5">
-                        
-                        <div wire:loading wire:target="file_bukti" class="text-sm text-blue-600 mt-2 font-medium">
-                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700">Pilih File</label>
+                        <div class="relative border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-primary-300 hover:bg-primary-50/30 transition-all cursor-pointer">
+                            <input wire:model="file_bukti" type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept=".jpg,.jpeg,.png,.pdf">
+                            <div class="flex flex-col items-center gap-2">
+                                <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                <p class="text-sm text-slate-500">Klik untuk upload <span class="font-semibold text-slate-600">JPG/PNG/PDF</span></p>
+                                <p class="text-xs text-slate-400">Maksimal 2MB</p>
+                            </div>
+                        </div>
+                        <div wire:loading wire:target="file_bukti" class="text-sm text-primary-600 mt-2 font-medium flex items-center gap-2">
+                            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             Mengunggah file...
                         </div>
-                        @error('file_bukti') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        @error('file_bukti') <span class="text-danger-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
                     </div>
-
-                    <div class="flex items-center justify-end gap-3 pt-4 mt-6 border-t border-slate-100">
-                        <button type="button" wire:click="closeDokumenModal" class="px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                    <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                        <button type="button" wire:click="closeDokumenModal" class="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all">
                             Batal
                         </button>
-                        <button type="submit" class="px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                        <button type="submit" class="px-5 py-2.5 text-sm font-semibold text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-all shadow-sm hover:shadow-md active:scale-[0.98] flex items-center gap-2">
                             <span wire:loading.remove wire:target="uploadDokumen">Simpan File</span>
                             <span wire:loading wire:target="uploadDokumen">Menyimpan...</span>
                         </button>
@@ -184,5 +275,4 @@
             </div>
         </div>
     @endif
-
 </div>

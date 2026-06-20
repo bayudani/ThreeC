@@ -8,6 +8,8 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use App\Models\Ormawa;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 #[Layout('layouts.app')]
@@ -100,8 +102,21 @@ class ManajemenOrmawa extends Component
             Ormawa::where('id', $this->editId)->update($data);
             session()->flash('success', 'Ormawa berhasil diperbarui.');
         } else {
-            Ormawa::create($data);
-            session()->flash('success', 'Ormawa berhasil ditambahkan.');
+            $ormawa = Ormawa::create($data);
+
+            $username = strtolower(str_replace(' ', '', $ormawa->nama));
+            $password = $username . 'unsera@26';
+
+            User::create([
+                'name' => "Admin {$ormawa->nama}",
+                'username' => $username,
+                // 'email' => "{$username}@unsera.ac.id",
+                'password' => Hash::make($password),
+                'role' => 'admin_ormawa',
+                'ormawa_id' => $ormawa->id,
+            ]);
+
+            session()->flash('success', "Ormawa berhasil ditambahkan. Akun: {$username} / {$password}");
         }
 
         $this->resetForm();
@@ -123,9 +138,10 @@ class ManajemenOrmawa extends Component
         if ($ormawa->logo) {
             Storage::disk('public')->delete($ormawa->logo);
         }
+        User::where('ormawa_id', $ormawa->id)->delete();
         $ormawa->delete();
         $this->confirmDeleteId = null;
-        session()->flash('success', 'Ormawa berhasil dihapus.');
+        session()->flash('success', 'Ormawa beserta akun penggunanya berhasil dihapus.');
     }
 
     public function batalHapus()
@@ -161,9 +177,9 @@ class ManajemenOrmawa extends Component
 
         $stats = [
             'total' => Ormawa::count(),
-            'hima' => Ormawa::where('kategori', 'HIMA')->count(),
+            'legislatif' => Ormawa::where('kategori', 'Legislatif')->count(),
+            'eksekutif' => Ormawa::where('kategori', 'Eksekutif')->count(),
             'ukm' => Ormawa::where('kategori', 'UKM')->count(),
-            'bem_dpm' => Ormawa::whereIn('kategori', ['BEM', 'DPM', 'MPM'])->count(),
         ];
 
         return view('livewire.admin.manajemen-ormawa', [

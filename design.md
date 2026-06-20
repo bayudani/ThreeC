@@ -1,44 +1,273 @@
-# Design System & UI Guidelines
 
-Desain mengacu pada referensi UI dashboard analitik modern (berdasarkan file `Dashboard - Three-C.png` dkk). Kesan yang ditimbulkan harus bersih, profesional, dan fokus pada data.
+# Three-C Design System
 
-## 1. Color Palette (Tailwind CSS)
+## Brand Identity
 
-Gunakan kombinasi warna berikut untuk konsistensi:
+Three-C (Cakra Control Center)
 
-* **Primary (Brand):** `indigo-600` (#4F46E5) untuk tombol utama, active state, dan progress bar.
-* **Background Utama:** `gray-50` (#F9FAFB) untuk latar belakang halaman.
-* **Sidebar Background:** `slate-50` / `blue-50` (Warna sangat terang, hampir putih dengan sedikit tint biru).
-* **Surface / Cards:** `white` (#FFFFFF) dengan shadow lembut (`shadow-sm` atau `shadow-md`).
-* **Text (Heading):** `gray-900` (#111827) font bold.
-* **Text (Body/Muted):** `gray-500` (#6B7280).
-* **Status Colors:**
-  * **Completed / Success:** `emerald-500` (#10B981) - Untuk proker selesai.
-  * **In Progress / Active:** `indigo-500` (#6366F1) - Untuk proker berjalan.
-  * **Not Started / Delayed:** `gray-300` atau `red-500` (#EF4444) untuk warning keterlambatan.
+Theme:
+Modern academic administration dashboard
 
-## 2. Typography
+Tone:
 
-* **Font Family:** Inter, Roboto, atau sistem sans-serif default Tailwind.
-* **Hierarki:**
-  * Page Title: `text-2xl font-bold text-gray-900`
-  * Card Title: `text-lg font-semibold text-gray-800`
-  * Metrik Angka (Dashboard): `text-4xl font-bold text-indigo-700`
+- Professional
+- Clean
+- Youthful
+- Trustworthy
+- Structured
 
-## 3. UI Components (Berdasarkan Referensi)
+---
 
-* **Sidebar:** Fixed di sebelah kiri, icon minimalis, highlight background biru muda (`bg-indigo-100 text-indigo-700`) untuk menu yang sedang aktif.
-* **Summary Cards (Atas):** Kotak putih, border tipis (`border-gray-100`), menampilkan Angka besar (Total Ormawa, Total Proker, Sedang Berjalan).
-* **Progress Bar:** Menggunakan rounded-full.
-  ```
-  <!-- Contoh Progress Bar -->
-  <div class="w-full bg-gray-200 rounded-full h-2.5">
-    <div class="bg-indigo-600 h-2.5 rounded-full" style="width: 75%"></div>
-  </div>
-  ```
-* **Tabel Data:** Clean design. Header abu-abu terang (`bg-gray-50`), teks kecil uppercase (`text-xs uppercase`), tanpa border vertikal, hanya border bawah horizontal tipis di tiap baris (`border-b border-gray-100`).
+## Core Design Principles
 
-## 4. Layouting
+### 1. Strong Hierarchy
 
-* Layout utama menggunakan CSS Grid atau Flexbox: `<div class="flex h-screen bg-gray-50">`
-* Konten diletakkan di dalam `<main class="flex-1 overflow-y-auto p-8">`
+Every page must have:
+
+- Primary title
+- Secondary context
+- Main content focus
+- Supporting information
+
+Hierarchy should feel obvious.
+
+---
+
+### 2. Better Spacing System
+
+Use 8px scale:
+
+- 8px
+- 12px
+- 16px
+- 24px
+- 32px
+- 40px
+- 48px
+
+Avoid random spacing.
+
+---
+
+### 3. Rounded Components
+
+Use:
+
+- Small: 12px
+- Medium: 16px
+- Large: 24px
+
+Avoid sharp corners.
+
+---
+
+## Colors
+
+### Primary
+
+Blue:
+#2563EB
+
+Dark Navy:
+#0F172A
+
+Light Blue:
+#DBEAFE
+
+Soft Gray:
+#F8FAFC
+
+Border:
+#E2E8F0
+
+---
+
+### Status Colors
+
+Success:
+#22C55E
+
+Pending:
+#F59E0B
+
+Danger:
+#EF4444
+
+Info:
+#3B82F6
+
+Neutral:
+#64748B
+
+---
+
+## Typography
+
+Font:
+Inter
+
+Hierarchy:
+
+H1:
+36px / Bold
+
+H2:
+28px / Semibold
+
+H3:
+22px / Semibold
+
+Body:
+16px / Regular
+
+Small:
+14px / Medium
+
+Caption:
+12px / Regular
+
+---
+
+## Layout Rules
+
+Desktop:
+
+Sidebar:
+280px fixed
+
+Content:
+Fluid width
+
+Max content:
+1440px
+
+Gap:
+24px
+
+Section padding:
+24px
+
+Card padding:
+20px
+
+---
+
+## Components
+
+### Cards
+
+Rules:
+
+- Different sizes allowed
+- Avoid same height everywhere
+- Create visual rhythm
+- Layer information
+
+Use:
+
+- Stat cards
+- Progress cards
+- Feed cards
+- Highlight cards
+
+---
+
+### Tables
+
+Rules:
+
+- Comfortable row spacing
+- Sticky headers
+- Status chips
+- Search
+- Filter
+- Pagination
+
+---
+
+### Forms
+
+Rules:
+
+- Group logically
+- Use clear labels
+- Helper text
+- Validation feedback
+- Better spacing
+
+---
+
+### Charts
+
+Rules:
+
+- More dominant
+- Bigger than cards
+- Better visual priority
+- Use tooltips
+- Show legends
+
+---
+
+## Visual Effects
+
+Allowed:
+
+- Soft shadow
+- Glassmorphism (light only)
+- Blur
+- Layered cards
+- Subtle background pattern
+
+Avoid:
+
+- Heavy gradients
+- Neon colors
+- Too much blur
+- Too many shadows
+
+---
+
+## UX Rules
+
+Always include:
+
+- Loading states
+- Empty states
+- Success states
+- Error states
+
+Every action must feel clear.
+
+---
+
+## Interaction Rules
+
+Buttons:
+
+Primary:
+Solid blue
+
+Secondary:
+Soft gray
+
+Danger:
+Red
+
+Hover:
+Slight elevation
+
+Transition:
+200ms
+
+---
+
+## Overall Goal
+
+The system should feel like:
+
+"University-grade digital governance platform"
+
+NOT:
+
+"Free admin template generated in 30 seconds"

@@ -28,11 +28,12 @@ class DatabaseSeeder extends Seeder
         $ormawas = Ormawa::all();
         foreach ($ormawas as $ormawa) {
             $username = strtolower(str_replace(' ', '', $ormawa->nama));
+            $password = $username . ('@unsera26');
             User::create([
                 'name' => "Admin {$ormawa->nama}",
                 'username' => $username,
-                'email' => "{$username}@unsera.ac.id",
-                'password' => Hash::make('password123'),
+                // 'email' => "{$username}@unsera.ac.id",
+                'password' => Hash::make($password),
                 'role' => 'admin_ormawa',
                 'ormawa_id' => $ormawa->id,
             ]);

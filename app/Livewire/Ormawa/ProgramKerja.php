@@ -118,16 +118,29 @@ class ProgramKerja extends Component
 
     public function render()
     {
-        $prokers = Proker::with('dokumentasis') // Eager load relasi dokumentasi
-            ->where('ormawa_id', Auth::user()->ormawa_id)
+        $ormawaId = Auth::user()->ormawa_id;
+
+        $prokers = Proker::with('dokumentasis')
+            ->where('ormawa_id', $ormawaId)
             ->when($this->search, function($query) {
                 $query->where('nama_proker', 'like', '%'.$this->search.'%');
             })
             ->latest()
             ->paginate(10);
 
+        $totalProker = Proker::where('ormawa_id', $ormawaId)->count();
+        $selesai = Proker::where('ormawa_id', $ormawaId)->where('status', 'selesai')->count();
+        $berjalan = Proker::where('ormawa_id', $ormawaId)->where('status', 'berjalan')->count();
+        $belumDimulai = Proker::where('ormawa_id', $ormawaId)->where('status', 'belum_dimulai')->count();
+
         return view('livewire.ormawa.program-kerja', [
-            'prokers' => $prokers
+            'prokers' => $prokers,
+            'stats' => [
+                'total' => $totalProker,
+                'selesai' => $selesai,
+                'berjalan' => $berjalan,
+                'belum_dimulai' => $belumDimulai,
+            ],
         ]);
     }
 }

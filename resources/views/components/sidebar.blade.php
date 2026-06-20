@@ -27,9 +27,10 @@
             'admin_only' => true,
         ],
         'Dokumentasi' => [
-            'route' => $isAdmin ? 'admin.laporan' : 'ormawa.laporan',
+            'route' =>  'admin.laporan',
             'icon' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>',
             'active' => str_contains($route ?? '', 'laporan') && !str_contains($route ?? '', 'evaluasi'),
+            'admin_only' => true,
         ],
         'Pengumuman' => [
             'route' => 'admin.pengumuman',
@@ -38,60 +39,49 @@
             'admin_only' => true,
         ],
     ];
-
-    $userLabel = $isAdmin ? 'Admin Kampus' : 'Admin Ormawa';
-    $userInitial = substr(Auth::user()->name, 0, 1);
 @endphp
 
 <aside
-    class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 ease-in-out md:translate-x-0"
+    class="fixed inset-y-0 left-0 z-40 w-64 bg-[#0f172a] text-slate-300 flex flex-col transition-all duration-300 ease-in-out md:translate-x-0"
     :class="sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'"
 >
-    <div class="h-16 flex items-center gap-2.5 px-5 border-b border-slate-100 shrink-0">
-        <img src="{{ asset('images/logo.png') }}" alt="Three-C" class="h-9 w-9 object-contain">
-        <div>
-            <h1 class="text-lg font-extrabold text-blue-700 leading-tight">Three<span class="text-slate-800"> - C</span></h1>
-            <p class="text-[10px] font-medium text-slate-400 leading-tight -mt-0.5">Cakra Control Center</p>
+    <!-- Header Section -->
+    <div class="h-20 flex items-center gap-3 px-6 shrink-0 pt-4 pb-2">
+        <!-- Logo Wrapper (Diberi bg biru supaya mirip referensi icon square) -->
+        <div class="w-9 h-9 bg-blue-600 rounded flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+            <img src="{{ asset('images/logo.png') }}" alt="Three-C" class="h-6 w-6 object-contain">
+        </div>
+        <div class="flex flex-col justify-center">
+            <h1 class="text-[17px] font-medium text-white tracking-wide leading-none">Three-C</h1>
+            <p class="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1.5 leading-none">Management Center</p>
         </div>
     </div>
 
-    <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5 scrollbar-thin">
+    <!-- Navigation Menu -->
+    <nav class="flex-1 overflow-y-auto py-4 space-y-1 scrollbar-thin mt-2">
         @foreach($navItems as $label => $item)
             @if(!empty($item['admin_only']) && !$isAdmin)
                 @continue
             @endif
             <a href="{{ route($item['route']) }}"
-                class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150
+                class="group flex items-center gap-4 px-6 py-3.5 text-[15px] transition-all duration-200
                 {{ $item['active']
-                    ? 'bg-blue-50 text-blue-700 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100' }}">
-                <span class="shrink-0 {{ $item['active'] ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600' }}">
+                    ? 'bg-[#1e293b] text-white border-l-4 border-blue-500 shadow-sm'
+                    : 'text-slate-400 border-l-4 border-transparent hover:bg-slate-800/50 hover:text-slate-200' }}">
+                <span class="shrink-0 transition-colors {{ $item['active'] ? 'text-white' : 'text-slate-400 group-hover:text-slate-300' }}">
                     {!! $item['icon'] !!}
                 </span>
-                <span>{{ $label }}</span>
-                @if($item['active'])
-                <span class="ml-auto w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-                @endif
+                <span class="font-normal">{{ $label }}</span>
             </a>
         @endforeach
     </nav>
 
-    <div class="border-t border-slate-100 p-3 space-y-2 shrink-0">
-        <a href="{{ route('profile') }}"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors
-            {{ str_contains($route ?? '', 'profile') ? 'bg-blue-50' : 'hover:bg-slate-50' }}">
-            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm">
-                {{ $userInitial }}
-            </div>
-            <div class="min-w-0 flex-1">
-                <p class="text-sm font-semibold text-slate-800 leading-tight truncate">{{ Auth::user()->name }}</p>
-                <p class="text-xs text-slate-400 truncate">{{ $userLabel }}</p>
-            </div>
-        </a>
-
+    <!-- Footer Area (Hanya Logout Karena Profile Pindah ke Topbar) -->
+    <div class="p-4 shrink-0 mt-auto border-t border-slate-800">
+        <!-- Tombol Logout -->
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-            <button type="submit" class="flex w-full items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all">
+            <button type="submit" class="flex w-full items-center gap-4 px-3 py-3 text-[15px] font-normal text-slate-400 hover:text-red-400 hover:bg-slate-800/50 rounded-lg transition-all">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 <span>Logout</span>
             </button>
@@ -99,8 +89,9 @@
     </div>
 </aside>
 
+<!-- Mobile Overlay -->
 <div
-    class="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm md:hidden"
+    class="fixed inset-0 z-30 bg-slate-900/50 backdrop-blur-sm md:hidden"
     x-show="sidebarOpen"
     x-cloak
     @click="sidebarOpen = false"

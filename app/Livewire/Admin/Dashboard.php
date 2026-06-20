@@ -55,7 +55,7 @@ class Dashboard extends Component
 
         $chartCategories = [];
         $chartData = [];
-        foreach (['BEM', 'DPM', 'HIMA', 'UKM', 'MPM'] as $cat) {
+        foreach (['Legislatif', 'Eksekutif', 'UKM'] as $cat) {
             $total = $prokerPerKategori->get($cat, 0);
             if ($total > 0) {
                 $chartCategories[] = $cat;
