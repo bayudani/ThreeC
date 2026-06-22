@@ -1,12 +1,14 @@
 <?php
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Append;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 #[Fillable(['nama', 'kategori', 'fakultas', 'periode', 'logo'])]
+#[Append('admin_password')]
 class Ormawa extends Model
 {
     public function users(): HasMany {
@@ -20,5 +22,12 @@ class Ormawa extends Model
     public function logoUrl(): string
     {
         return $this->logo ? Storage::url($this->logo) : '';
+    }
+
+    public function getAdminPasswordAttribute(): string
+    {
+        $user = $this->users()->first();
+        if (!$user) return '-';
+        return $user->username . '@unsera26';
     }
 }

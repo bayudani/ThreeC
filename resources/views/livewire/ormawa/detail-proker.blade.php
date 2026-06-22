@@ -83,9 +83,9 @@
                                 <option value="selesai">Selesai</option>
                             </select>
                         </div>
-                        <button type="submit" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2">
+                        <button type="submit" wire:loading.attr="disabled" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.97] text-white text-sm font-medium rounded-lg transition-all flex items-center gap-2">
                             <span wire:loading.remove wire:target="updateProgress">Simpan Progress</span>
-                            <span wire:loading wire:target="updateProgress">Menyimpan...</span>
+                            <span wire:loading wire:target="updateProgress" style="display: none;">Menyimpan...</span>
                         </button>
                     </div>
                 </form>
@@ -153,9 +153,9 @@
                         <div wire:loading wire:target="file_bukti" class="text-[10px] text-indigo-600 mt-1 font-medium">Memproses file sementara...</div>
                         @error('file_bukti') <span class="text-red-500 text-[10px] block mt-1">{{ $message }}</span> @enderror
                     </div>
-                    <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <button type="submit" wire:loading.attr="disabled" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.97] text-white text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2">
                         <span wire:loading.remove wire:target="uploadDokumen">Upload File</span>
-                        <span wire:loading wire:target="uploadDokumen">Mengunggah...</span>
+                        <span wire:loading wire:target="uploadDokumen" style="display: none;">Mengunggah...</span>
                     </button>
                 </form>
             </div>

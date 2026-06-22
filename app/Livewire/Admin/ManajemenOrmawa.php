@@ -19,7 +19,7 @@ class ManajemenOrmawa extends Component
 
     public $search = '';
     public $filterKategori = '';
-    public $viewMode = 'card';
+    public $viewMode = 'table';
 
     // Modal & Form
     public $showForm = false;
@@ -173,7 +173,7 @@ class ManajemenOrmawa extends Component
                 $q->where('kategori', $this->filterKategori);
             });
 
-        $ormawas = $query->latest()->paginate(11);
+        $ormawas = $query->with('users')->latest()->paginate(11);
 
         $stats = [
             'total' => Ormawa::count(),

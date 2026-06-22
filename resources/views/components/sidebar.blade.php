@@ -47,9 +47,9 @@
 >
     <!-- Header Section -->
     <div class="h-20 flex items-center gap-3 px-6 shrink-0 pt-4 pb-2">
-        <!-- Logo Wrapper (Diberi bg biru supaya mirip referensi icon square) -->
-        <div class="w-9 h-9 bg-blue-600 rounded flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
-            <img src="{{ asset('images/logo.png') }}" alt="Three-C" class="h-6 w-6 object-contain">
+        <!-- Logo Wrapper -->
+        <div class="w-14 h-14 border-2 border-white/30 rounded-xl flex items-center justify-center shrink-0 shadow-lg overflow-hidden bg-white/5 backdrop-blur-sm">
+            <img src="{{ asset('images/logo.png') }}" alt="Three-C" class="h-10 w-10 object-contain">
         </div>
         <div class="flex flex-col justify-center">
             <h1 class="text-[17px] font-medium text-white tracking-wide leading-none">Three-C</h1>

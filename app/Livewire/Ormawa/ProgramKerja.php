@@ -34,6 +34,50 @@ class ProgramKerja extends Component
     public $keterangan_file;
 
     // ==========================================
+    // STATE UNTUK MODAL BUAT PROKER
+    // ==========================================
+    public $isBuatModalOpen = false;
+
+    #[Rule('required|min:5', message: 'Nama program kerja minimal 5 karakter.')]
+    public $nama_proker;
+
+    #[Rule('nullable|string', message: 'Deskripsi harus berupa teks.')]
+    public $deskripsi;
+
+    #[Rule('required|date', message: 'Target waktu wajib diisi dengan format tanggal.')]
+    public $target_waktu;
+
+    public function openBuatModal()
+    {
+        $this->resetValidation();
+        $this->reset(['nama_proker', 'deskripsi', 'target_waktu']);
+        $this->isBuatModalOpen = true;
+    }
+
+    public function closeBuatModal()
+    {
+        $this->isBuatModalOpen = false;
+        $this->reset(['nama_proker', 'deskripsi', 'target_waktu']);
+    }
+
+    public function simpanProker()
+    {
+        $this->validate();
+
+        Proker::create([
+            'ormawa_id' => Auth::user()->ormawa_id,
+            'nama_proker' => $this->nama_proker,
+            'deskripsi' => $this->deskripsi,
+            'target_waktu' => $this->target_waktu,
+            'status' => 'belum_dimulai',
+            'progress' => 0,
+        ]);
+
+        $this->closeBuatModal();
+        session()->flash('success', 'Program kerja berhasil didaftarkan! Silakan pantau progresnya.');
+    }
+
+    // ==========================================
     // LOGIKA PROGRESS
     // ==========================================
     public function openProgressModal($id)
