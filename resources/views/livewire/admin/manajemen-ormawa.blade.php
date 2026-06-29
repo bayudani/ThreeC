@@ -13,28 +13,29 @@
                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Manajemen Ormawa</h2>
-                    <p class="text-sm text-slate-500">Kelola data seluruh Organisasi Mahasiswa di kampus</p>
+                    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Manajemen {{ $pageType === 'ukm' ? 'UKM' : 'Ormawa' }}</h2>
+                    <p class="text-sm text-slate-500">Kelola data {{ $pageType === 'ukm' ? 'Unit Kegiatan Mahasiswa' : 'seluruh Organisasi Mahasiswa' }} di kampus</p>
                 </div>
             </div>
         </div>
         <button wire:click="tambah" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.97] text-white text-sm font-semibold rounded-xl transition-all shadow-sm hover:shadow-md flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-            Tambah Ormawa
+            Tambah {{ $pageType === 'ukm' ? 'UKM' : 'Ormawa' }}
         </button>
     </div>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 {{ $pageType === 'ukm' ? 'lg:grid-cols-1 max-w-xs' : 'lg:grid-cols-4' }} gap-4">
         <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
             <div class="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full -translate-y-8 translate-x-8"></div>
             <div class="relative">
                 <div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center mb-3">
                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 </div>
-                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Ormawa</p>
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total {{ $pageType === 'ukm' ? 'UKM' : 'Ormawa' }}</p>
                 <h3 class="text-3xl font-bold text-slate-800 mt-1.5">{{ $stats['total'] }}</h3>
             </div>
         </div>
+        @if($pageType !== 'ukm')
         <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
             <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full -translate-y-8 translate-x-8"></div>
             <div class="relative">
@@ -55,20 +56,17 @@
                 <h3 class="text-3xl font-bold text-slate-800 mt-1.5">{{ $stats['eksekutif'] }}</h3>
             </div>
         </div>
-        <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-violet-500/5 rounded-full -translate-y-8 translate-x-8"></div>
-            <div class="relative">
-                <div class="w-9 h-9 bg-violet-100 rounded-lg flex items-center justify-center mb-3">
-                    <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">UKM</p>
-                <h3 class="text-3xl font-bold text-slate-800 mt-1.5">{{ $stats['ukm'] }}</h3>
-            </div>
-        </div>
+        @endif
     </div>
 
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
         <div class="flex items-center gap-1.5 flex-wrap">
+            @if($pageType === 'ukm')
+            <button wire:click="setKategori('')"
+                class="px-4 py-2 text-sm font-medium rounded-lg transition-all {{ $filterKategori === '' ? 'bg-blue-600 text-white shadow-sm shadow-blue-200' : 'text-slate-600 hover:bg-slate-100' }}">
+                Semua UKM
+            </button>
+            @else
             <button wire:click="setKategori('')"
                 class="px-4 py-2 text-sm font-medium rounded-lg transition-all {{ $filterKategori === '' ? 'bg-blue-600 text-white shadow-sm shadow-blue-200' : 'text-slate-600 hover:bg-slate-100' }}">
                 Semua
@@ -81,10 +79,7 @@
                 class="px-4 py-2 text-sm font-medium rounded-lg transition-all {{ $filterKategori === 'Eksekutif' ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-200' : 'text-slate-600 hover:bg-slate-100' }}">
                 Eksekutif
             </button>
-            <button wire:click="setKategori('UKM')"
-                class="px-4 py-2 text-sm font-medium rounded-lg transition-all {{ $filterKategori === 'UKM' ? 'bg-violet-500 text-white shadow-sm shadow-violet-200' : 'text-slate-600 hover:bg-slate-100' }}">
-                UKM
-            </button>
+            @endif
         </div>
 
         <div class="flex items-center gap-3 w-full md:w-auto">
@@ -94,7 +89,7 @@
                 </div>
                 <input wire:model.live.debounce.300ms="search" type="text"
                     class="bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block w-full pl-9 p-2.5 placeholder:text-slate-400"
-                    placeholder="Cari nama ormawa...">
+                    placeholder="Cari nama {{ $pageType === 'ukm' ? 'UKM' : 'ormawa' }}...">
             </div>
 
             <div class="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
@@ -166,7 +161,7 @@
                     <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-4 border border-slate-200 group-hover:border-blue-200 group-hover:shadow-md transition-all">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     </div>
-                    <span class="font-semibold text-slate-700 group-hover:text-blue-700">Daftarkan Ormawa Baru</span>
+                    <span class="font-semibold text-slate-700 group-hover:text-blue-700">Daftarkan {{ $pageType === 'ukm' ? 'UKM' : 'Ormawa' }} Baru</span>
                     <span class="text-sm text-center mt-1 text-slate-400 group-hover:text-blue-500">Mulai proses pendaftaran resmi</span>
                 </button>
             @endif
@@ -245,8 +240,8 @@
                                         <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
                                             <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                                         </div>
-                                        <p class="text-base font-semibold text-slate-600">Tidak ada data ormawa</p>
-                                        <p class="text-sm text-slate-400 mt-1">Belum ada organisasi yang terdaftar</p>
+                                        <p class="text-base font-semibold text-slate-600">Tidak ada data {{ $pageType === 'ukm' ? 'UKM' : 'ormawa' }}</p>
+                                        <p class="text-sm text-slate-400 mt-1">Belum ada {{ $pageType === 'ukm' ? 'UKM' : 'organisasi' }} yang terdaftar</p>
                                     </div>
                                 </td>
                             </tr>
@@ -270,7 +265,7 @@
                         <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $editId ? 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' : 'M12 6v6m0 0v6m0-6h6m-6 0H6' }}"></path></svg>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-800">{{ $editId ? 'Edit Ormawa' : 'Tambah Ormawa' }}</h3>
+                        <h3 class="text-lg font-bold text-slate-800">{{ $editId ? 'Edit ' : 'Tambah ' }}{{ $pageType === 'ukm' ? 'UKM' : 'Ormawa' }}</h3>
                     </div>
                     <button wire:click="batal" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -280,17 +275,20 @@
                 <form wire:submit="save" class="p-6 space-y-5">
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nama Organisasi</label>
-                        <input wire:model="nama" type="text" class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm px-3 py-2.5" placeholder="Masukkan nama ormawa">
+                        <input wire:model="nama" type="text" class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm px-3 py-2.5" placeholder="Masukkan nama {{ $pageType === 'ukm' ? 'UKM' : 'ormawa' }}">
                         @error('nama') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Kategori</label>
-                        <select wire:model="kategori" class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm px-3 py-2.5">
+                        <select wire:model="kategori" class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm px-3 py-2.5" {{ $pageType === 'ukm' ? 'disabled' : '' }}>
+                            @if($pageType === 'ukm')
+                            <option value="UKM">UKM</option>
+                            @else
                             <option value="">Pilih kategori</option>
                             <option value="Legislatif">Legislatif</option>
                             <option value="Eksekutif">Eksekutif</option>
-                            <option value="UKM">UKM</option>
+                            @endif
                         </select>
                         @error('kategori') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
                     </div>
@@ -331,7 +329,7 @@
                     <div class="flex justify-end gap-3 pt-2 border-t border-slate-100">
                         <button type="button" wire:click="batal" class="px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all">Batal</button>
                         <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.97] text-white text-sm font-semibold rounded-xl transition-all shadow-sm">
-                            {{ $editId ? 'Simpan Perubahan' : 'Tambah Ormawa' }}
+                            {{ $editId ? 'Simpan Perubahan' : 'Tambah ' . ($pageType === 'ukm' ? 'UKM' : 'Ormawa') }}
                         </button>
                     </div>
                 </form>
@@ -346,8 +344,8 @@
                 <div class="w-16 h-16 mx-auto bg-red-100 rounded-2xl flex items-center justify-center mb-5">
                     <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path></svg>
                 </div>
-                <h3 class="text-lg font-bold text-slate-800 mb-2">Hapus Ormawa?</h3>
-                <p class="text-sm text-slate-500 mb-7">Data ormawa dan seluruh program kerjanya akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.</p>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Hapus {{ $pageType === 'ukm' ? 'UKM' : 'Ormawa' }}?</h3>
+                <p class="text-sm text-slate-500 mb-7">Data {{ $pageType === 'ukm' ? 'UKM' : 'ormawa' }} dan seluruh program kerjanya akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.</p>
                 <div class="flex justify-center gap-3">
                     <button wire:click="batalHapus" class="px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all">Batal</button>
                     <button wire:click="delete" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 active:scale-[0.97] text-white text-sm font-semibold rounded-xl transition-all shadow-sm">Ya, Hapus</button>

@@ -20,9 +20,9 @@
                 <div class="absolute inset-0 bg-gradient-to-br from-blue-950/90 via-slate-900/80 to-indigo-950/90 mix-blend-multiply"></div>
                 
                 <div class="relative z-10 w-full max-w-lg p-12 mx-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-[2.5rem] shadow-2xl">
-                    <div class="w-20 h-20 bg-white/95 backdrop-blur flex items-center justify-center rounded-2xl shadow-xl mb-8 border border-white/50">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo Three-C" class="h-14 w-14 object-contain">
-                    </div>
+                        {{-- <div class="w-20 h-20 bg-white/95 backdrop-blur flex items-center justify-center rounded-2xl shadow-xl mb-8 border border-white/50">
+                            <span class="text-3xl font-extrabold text-blue-600 tracking-tight">TC</span>
+                        </div> --}}
                     
                     <h1 class="text-5xl font-extrabold text-white tracking-tight mb-3">
                         Three<span class="text-blue-400"> - C</span>
@@ -44,7 +44,7 @@
                 <div class="w-full max-w-md relative z-10">
                     <div class="text-center mb-10 lg:hidden">
                         <div class="w-20 h-20 bg-white flex items-center justify-center rounded-2xl shadow-sm border border-slate-200 mx-auto mb-5">
-                            <img src="{{ asset('images/logo.png') }}" alt="Three-C" class="h-12 w-12 object-contain">
+                            <span class="text-2xl font-extrabold text-blue-600 tracking-tight">TC</span>
                         </div>
                         <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Three<span class="text-blue-600">C</span></h1>
                         <p class="text-sm font-bold text-slate-500 mt-2 tracking-wide uppercase">Cakra Control Center</p>

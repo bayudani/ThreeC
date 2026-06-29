@@ -40,6 +40,15 @@ class DetailProker extends Component
 
     public function updateProgress()
     {
+        if ($this->proker->isPending()) {
+            session()->flash('error', 'Program kerja masih menunggu validasi admin.');
+            return;
+        }
+        if ($this->proker->isRejected()) {
+            session()->flash('error', 'Program kerja ditolak: ' . $this->proker->rejection_reason);
+            return;
+        }
+
         $this->validate([
             'progress' => 'required|numeric|min:0|max:100',
             'status' => 'required|in:belum_dimulai,berjalan,selesai'
@@ -58,6 +67,15 @@ class DetailProker extends Component
 
     public function uploadDokumen()
     {
+        if ($this->proker->isPending()) {
+            session()->flash('error', 'Program kerja masih menunggu validasi admin.');
+            return;
+        }
+        if ($this->proker->isRejected()) {
+            session()->flash('error', 'Program kerja ditolak: ' . $this->proker->rejection_reason);
+            return;
+        }
+
         $this->validateOnly('file_bukti');
         $this->validateOnly('keterangan_file');
 
@@ -75,6 +93,11 @@ class DetailProker extends Component
 
     public function hapusDokumen($id)
     {
+        if ($this->proker->isPending() || $this->proker->isRejected()) {
+            session()->flash('error', 'Tidak dapat mengubah dokumen pada program yang belum divalidasi.');
+            return;
+        }
+
         $dokumen = Dokumentasi::where('proker_id', $this->proker->id)->findOrFail($id);
         Storage::disk('public')->delete($dokumen->file_path);
         $dokumen->delete();

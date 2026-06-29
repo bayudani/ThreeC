@@ -17,9 +17,18 @@ class ManajemenOrmawa extends Component
 {
     use WithPagination, WithFileUploads;
 
+    public $pageType = 'ormawa';
     public $search = '';
     public $filterKategori = '';
     public $viewMode = 'table';
+
+    public function mount()
+    {
+        if (request()->route()->getName() === 'admin.ukm') {
+            $this->pageType = 'ukm';
+            $this->filterKategori = 'UKM';
+        }
+    }
 
     // Modal & Form
     public $showForm = false;
@@ -64,6 +73,9 @@ class ManajemenOrmawa extends Component
     public function tambah()
     {
         $this->resetForm();
+        if ($this->pageType === 'ukm') {
+            $this->kategori = 'UKM';
+        }
         $this->showForm = true;
     }
 
@@ -100,7 +112,7 @@ class ManajemenOrmawa extends Component
 
         if ($this->editId) {
             Ormawa::where('id', $this->editId)->update($data);
-            session()->flash('success', 'Ormawa berhasil diperbarui.');
+            session()->flash('success', 'Data berhasil diperbarui.');
         } else {
             $ormawa = Ormawa::create($data);
 
@@ -110,13 +122,12 @@ class ManajemenOrmawa extends Component
             User::create([
                 'name' => "Admin {$ormawa->nama}",
                 'username' => $username,
-                // 'email' => "{$username}@unsera.ac.id",
                 'password' => Hash::make($password),
                 'role' => 'admin_ormawa',
                 'ormawa_id' => $ormawa->id,
             ]);
 
-            session()->flash('success', "Ormawa berhasil ditambahkan. Akun: {$username} / {$password}");
+            session()->flash('success', "Berhasil ditambahkan. Akun: {$username} / {$password}");
         }
 
         $this->resetForm();
@@ -141,7 +152,7 @@ class ManajemenOrmawa extends Component
         User::where('ormawa_id', $ormawa->id)->delete();
         $ormawa->delete();
         $this->confirmDeleteId = null;
-        session()->flash('success', 'Ormawa beserta akun penggunanya berhasil dihapus.');
+        session()->flash('success', 'Data beserta akun berhasil dihapus.');
     }
 
     public function batalHapus()
@@ -164,27 +175,51 @@ class ManajemenOrmawa extends Component
 
     public function render()
     {
-        $query = Ormawa::query()
-            ->when($this->search, function ($q) {
-                $q->where('nama', 'like', '%' . $this->search . '%')
-                  ->orWhere('fakultas', 'like', '%' . $this->search . '%');
-            })
-            ->when($this->filterKategori, function ($q) {
-                $q->where('kategori', $this->filterKategori);
-            });
+        if ($this->pageType === 'ukm') {
+            $query = Ormawa::query()
+                ->where('kategori', 'UKM')
+                ->when($this->search, function ($q) {
+                    $q->where(function ($sub) {
+                        $sub->where('nama', 'like', '%' . $this->search . '%')
+                            ->orWhere('fakultas', 'like', '%' . $this->search . '%');
+                    });
+                });
 
-        $ormawas = $query->with('users')->latest()->paginate(11);
+            $ormawas = $query->with('users')->latest()->paginate(11);
 
-        $stats = [
-            'total' => Ormawa::count(),
-            'legislatif' => Ormawa::where('kategori', 'Legislatif')->count(),
-            'eksekutif' => Ormawa::where('kategori', 'Eksekutif')->count(),
-            'ukm' => Ormawa::where('kategori', 'UKM')->count(),
-        ];
+            $stats = [
+                'total' => Ormawa::where('kategori', 'UKM')->count(),
+                'legislatif' => 0,
+                'eksekutif' => 0,
+                'ukm' => Ormawa::where('kategori', 'UKM')->count(),
+            ];
+        } else {
+            $query = Ormawa::query()
+                ->whereIn('kategori', ['Legislatif', 'Eksekutif'])
+                ->when($this->search, function ($q) {
+                    $q->where(function ($sub) {
+                        $sub->where('nama', 'like', '%' . $this->search . '%')
+                            ->orWhere('fakultas', 'like', '%' . $this->search . '%');
+                    });
+                })
+                ->when($this->filterKategori, function ($q) {
+                    $q->where('kategori', $this->filterKategori);
+                });
+
+            $ormawas = $query->with('users')->latest()->paginate(11);
+
+            $stats = [
+                'total' => Ormawa::whereIn('kategori', ['Legislatif', 'Eksekutif'])->count(),
+                'legislatif' => Ormawa::where('kategori', 'Legislatif')->count(),
+                'eksekutif' => Ormawa::where('kategori', 'Eksekutif')->count(),
+                'ukm' => 0,
+            ];
+        }
 
         return view('livewire.admin.manajemen-ormawa', [
             'ormawas' => $ormawas,
-            'stats' => $stats
+            'stats' => $stats,
+            'pageType' => $this->pageType,
         ]);
     }
 }

@@ -46,8 +46,9 @@ class Dashboard extends Component
             'nama_proker' => $this->nama_proker,
             'deskripsi' => $this->deskripsi,
             'target_waktu' => $this->target_waktu,
-            'status' => 'belum_dimulai', // Status default
-            'progress' => 0, // Progress default
+            'status' => 'belum_dimulai',
+            'progress' => 0,
+            'validated_at' => null,
         ]);
 
         // 3. Tutup modal & beri notifikasi

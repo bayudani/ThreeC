@@ -71,6 +71,7 @@ class ProgramKerja extends Component
             'target_waktu' => $this->target_waktu,
             'status' => 'belum_dimulai',
             'progress' => 0,
+            'validated_at' => null,
         ]);
 
         $this->closeBuatModal();
@@ -83,6 +84,14 @@ class ProgramKerja extends Component
     public function openProgressModal($id)
     {
         $proker = Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($id);
+        if ($proker->isPending()) {
+            session()->flash('error', 'Program kerja masih menunggu validasi admin.');
+            return;
+        }
+        if ($proker->isRejected()) {
+            session()->flash('error', 'Program kerja ditolak: ' . $proker->rejection_reason);
+            return;
+        }
         $this->proker_id = $proker->id;
         $this->progress = $proker->progress;
         $this->status = $proker->status;
@@ -123,6 +132,14 @@ class ProgramKerja extends Component
     public function openDokumenModal($id)
     {
         $proker = Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($id);
+        if ($proker->isPending()) {
+            session()->flash('error', 'Program kerja masih menunggu validasi admin.');
+            return;
+        }
+        if ($proker->isRejected()) {
+            session()->flash('error', 'Program kerja ditolak: ' . $proker->rejection_reason);
+            return;
+        }
         $this->proker_id = $proker->id;
         $this->isDokumenModalOpen = true;
     }
@@ -177,6 +194,8 @@ class ProgramKerja extends Component
         $berjalan = Proker::where('ormawa_id', $ormawaId)->where('status', 'berjalan')->count();
         $belumDimulai = Proker::where('ormawa_id', $ormawaId)->where('status', 'belum_dimulai')->count();
 
+        $pending = Proker::where('ormawa_id', $ormawaId)->whereNull('validated_at')->whereNull('rejection_reason')->count();
+
         return view('livewire.ormawa.program-kerja', [
             'prokers' => $prokers,
             'stats' => [
@@ -184,6 +203,7 @@ class ProgramKerja extends Component
                 'selesai' => $selesai,
                 'berjalan' => $berjalan,
                 'belum_dimulai' => $belumDimulai,
+                'pending' => $pending,
             ],
         ]);
     }

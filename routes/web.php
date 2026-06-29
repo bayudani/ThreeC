@@ -47,6 +47,7 @@ Route::prefix('admin')
         
         Route::get('/dashboard', AdminDashboard::class)->name('admin.dashboard');
         Route::get('/ormawa', ManajemenOrmawa::class)->name('admin.ormawa');
+        Route::get('/ukm', ManajemenOrmawa::class)->name('admin.ukm');
         Route::get('/proker', ProgramKerja::class)->name('admin.proker');
         Route::get('/proker/{id}', ProkerDetail::class)->name('admin.proker.detail');
         Route::get('/laporan', Laporan::class)->name('admin.laporan');

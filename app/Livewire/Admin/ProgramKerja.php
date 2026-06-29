@@ -13,7 +13,11 @@ class ProgramKerja extends Component
     use WithPagination;
 
     public $search = '';
-    public $filterStatus = ''; // '' = semua, 'belum_dimulai', 'berjalan', 'selesai'
+    public $filterStatus = '';
+
+    public $showRejectModal = false;
+    public $rejectProkerId = null;
+    public $rejection_reason = '';
 
     public function updatingSearch()
     {
@@ -26,9 +30,49 @@ class ProgramKerja extends Component
         $this->resetPage();
     }
 
+    public function approveProker($id)
+    {
+        $proker = Proker::findOrFail($id);
+        $proker->update([
+            'validated_at' => now(),
+            'status' => 'berjalan',
+            'rejection_reason' => null,
+        ]);
+        session()->flash('success', 'Program kerja berhasil divalidasi!');
+    }
+
+    public function openRejectModal($id)
+    {
+        $this->rejectProkerId = $id;
+        $this->rejection_reason = '';
+        $this->showRejectModal = true;
+    }
+
+    public function closeRejectModal()
+    {
+        $this->showRejectModal = false;
+        $this->rejectProkerId = null;
+        $this->rejection_reason = '';
+    }
+
+    public function rejectProker()
+    {
+        $this->validate([
+            'rejection_reason' => 'required|string|min:3',
+        ]);
+
+        $proker = Proker::findOrFail($this->rejectProkerId);
+        $proker->update([
+            'validated_at' => null,
+            'rejection_reason' => $this->rejection_reason,
+        ]);
+
+        $this->closeRejectModal();
+        session()->flash('success', 'Program kerja ditolak.');
+    }
+
     public function render()
     {
-        // Query utama dengan relasi Ormawa
         $query = Proker::with('ormawa')
             ->when($this->search, function ($q) {
                 $q->where('nama_proker', 'like', '%' . $this->search . '%')
@@ -37,18 +81,24 @@ class ProgramKerja extends Component
                   });
             })
             ->when($this->filterStatus, function ($q) {
-                $q->where('status', $this->filterStatus);
+                if ($this->filterStatus === 'menunggu_validasi') {
+                    $q->whereNull('validated_at')->whereNull('rejection_reason');
+                } elseif ($this->filterStatus === 'ditolak') {
+                    $q->whereNotNull('rejection_reason');
+                } else {
+                    $q->where('status', $this->filterStatus)->whereNotNull('validated_at');
+                }
             });
 
-        $prokers = $query->orderBy('target_waktu', 'asc')->paginate(10);
+        $prokers = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        // Menghitung statistik untuk Header Cards
         $totalProker = Proker::count();
-        $selesai = Proker::where('status', 'selesai')->count();
-        $berjalan = Proker::where('status', 'berjalan')->count();
-        $tertunda = Proker::where('status', 'belum_dimulai')->count();
-        
-        $successRate = $totalProker > 0 ? round(($selesai / $totalProker) * 100) : 0;
+        $selesai = Proker::where('status', 'selesai')->whereNotNull('validated_at')->count();
+        $berjalan = Proker::where('status', 'berjalan')->whereNotNull('validated_at')->count();
+        $tertunda = Proker::whereNull('validated_at')->whereNull('rejection_reason')->count();
+        $ditolak = Proker::whereNotNull('rejection_reason')->count();
+        $totalValidated = $selesai + $berjalan;
+        $successRate = $totalValidated > 0 ? round(($selesai / max($totalValidated, 1)) * 100) : 0;
 
         return view('livewire.admin.program-kerja', [
             'prokers' => $prokers,
@@ -56,6 +106,7 @@ class ProgramKerja extends Component
                 'successRate' => $successRate,
                 'berjalan' => $berjalan,
                 'tertunda' => $tertunda,
+                'ditolak' => $ditolak,
             ]
         ]);
     }

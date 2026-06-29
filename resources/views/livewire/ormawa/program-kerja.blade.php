@@ -1,12 +1,26 @@
 <div class="space-y-8">
     @if (session()->has('success'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show" x-transition.duration.300ms class="fixed top-4 right-4 z-50 max-w-sm bg-white rounded-2xl shadow-lg border border-success-100 p-4 flex items-start gap-3">
-            <div class="w-8 h-8 rounded-full bg-success-50 flex items-center justify-center shrink-0">
-                <svg class="w-4 h-4 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show" x-transition.duration.300ms class="fixed top-4 right-4 z-50 max-w-sm bg-white rounded-2xl shadow-lg border border-emerald-100 p-4 flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
             </div>
             <div class="flex-1 min-w-0">
                 <p class="text-sm font-semibold text-slate-800">Berhasil!</p>
                 <p class="text-xs text-slate-500 mt-0.5">{{ session('success') }}</p>
+            </div>
+            <button @click="show = false" class="text-slate-400 hover:text-slate-600 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    @endif
+    @if (session()->has('error'))
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show" x-transition.duration.300ms class="fixed top-4 right-4 z-50 max-w-sm bg-white rounded-2xl shadow-lg border border-red-100 p-4 flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-slate-800">Gagal!</p>
+                <p class="text-xs text-slate-500 mt-0.5">{{ session('error') }}</p>
             </div>
             <button @click="show = false" class="text-slate-400 hover:text-slate-600 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -46,7 +60,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
@@ -60,23 +74,34 @@
         </div>
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
             <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Menunggu</p>
+                    <p class="text-2xl font-bold text-amber-600 mt-0.5">{{ $stats['pending'] }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Berjalan</p>
+                    <p class="text-2xl font-bold text-blue-600 mt-0.5">{{ $stats['berjalan'] }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+            <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <div>
                     <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Selesai</p>
                     <p class="text-2xl font-bold text-emerald-600 mt-0.5">{{ $stats['selesai'] }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Berjalan</p>
-                    <p class="text-2xl font-bold text-amber-600 mt-0.5">{{ $stats['berjalan'] }}</p>
                 </div>
             </div>
         </div>
@@ -97,17 +122,28 @@
                 <tbody class="divide-y divide-slate-100">
                     @forelse($prokers as $proker)
                         @php
-                            $colors = match($proker->status) {
-                                'selesai' => ['dot' => 'bg-emerald-500', 'badge' => 'bg-emerald-50 text-emerald-700 border border-emerald-200', 'bar' => 'bg-emerald-500'],
-                                'berjalan' => ['dot' => 'bg-blue-500', 'badge' => 'bg-blue-50 text-blue-700 border border-blue-200', 'bar' => 'bg-blue-500'],
-                                default => ['dot' => 'bg-slate-400', 'badge' => 'bg-slate-50 text-slate-600 border border-slate-200', 'bar' => 'bg-slate-400'],
-                            };
-                            $label = match($proker->status) {
-                                'selesai' => 'Selesai',
-                                'berjalan' => 'Berjalan',
-                                default => 'Belum Dimulai',
-                            };
+                            $isPendingProker = $proker->isPending();
+                            $isRejectedProker = $proker->isRejected();
+                            if ($isPendingProker) {
+                                $colors = ['dot' => 'bg-amber-500', 'badge' => 'bg-amber-50 text-amber-700 border border-amber-200', 'bar' => 'bg-slate-400'];
+                                $label = 'Menunggu Validasi';
+                            } elseif ($isRejectedProker) {
+                                $colors = ['dot' => 'bg-red-500', 'badge' => 'bg-red-50 text-red-700 border border-red-200', 'bar' => 'bg-slate-400'];
+                                $label = 'Ditolak';
+                            } else {
+                                $colors = match($proker->status) {
+                                    'selesai' => ['dot' => 'bg-emerald-500', 'badge' => 'bg-emerald-50 text-emerald-700 border border-emerald-200', 'bar' => 'bg-emerald-500'],
+                                    'berjalan' => ['dot' => 'bg-blue-500', 'badge' => 'bg-blue-50 text-blue-700 border border-blue-200', 'bar' => 'bg-blue-500'],
+                                    default => ['dot' => 'bg-slate-400', 'badge' => 'bg-slate-50 text-slate-600 border border-slate-200', 'bar' => 'bg-slate-400'],
+                                };
+                                $label = match($proker->status) {
+                                    'selesai' => 'Selesai',
+                                    'berjalan' => 'Berjalan',
+                                    default => 'Belum Dimulai',
+                                };
+                            }
                             $docCount = $proker->dokumentasis->count();
+                            $canManage = $proker->isValidated();
                         @endphp
                         <tr class="bg-white border-b border-slate-100 hover:bg-blue-50/20 transition-colors">
                             <td class="px-5 py-4">
@@ -116,6 +152,12 @@
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     {{ \Carbon\Carbon::parse($proker->target_waktu)->translatedFormat('d M Y') }}
                                 </p>
+                                @if($isRejectedProker && $proker->rejection_reason)
+                                    <p class="text-xs text-red-500 mt-1 flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01"></path></svg>
+                                        {{ $proker->rejection_reason }}
+                                    </p>
+                                @endif
                             </td>
                             <td class="px-5 py-4 text-center">
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-lg {{ $colors['badge'] }}">
@@ -143,16 +185,23 @@
                             </td>
                             <td class="px-5 py-4 text-right">
                                 <div class="flex items-center justify-end gap-1.5">
-                                    <button wire:click="openProgressModal({{ $proker->id }})" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Update Progress">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                    </button>
-                                    <button wire:click="openDokumenModal({{ $proker->id }})" class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Upload Bukti">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                    </button>
-                                    <a href="{{ route('ormawa.proker.detail', $proker->id) }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.97] text-white text-xs font-semibold rounded-lg transition-all shadow-sm">
-                                        Kelola
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                                    </a>
+                                    @if($canManage)
+                                        <button wire:click="openProgressModal({{ $proker->id }})" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Update Progress">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                        </button>
+                                        <button wire:click="openDokumenModal({{ $proker->id }})" class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Upload Bukti">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                        </button>
+                                        <a href="{{ route('ormawa.proker.detail', $proker->id) }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.97] text-white text-xs font-semibold rounded-lg transition-all shadow-sm">
+                                            Kelola
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                        </a>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 rounded-lg border border-slate-200" title="{{ $isPendingProker ? 'Menunggu validasi admin' : 'Program ditolak' }}">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m0 0v2m0-2h2m-2 0h-2m-2-6a4 4 0 118 0"></path></svg>
+                                            {{ $isPendingProker ? 'Menunggu' : 'Ditolak' }}
+                                        </span>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

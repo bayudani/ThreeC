@@ -20,7 +20,8 @@ class Dashboard extends Component
 
     public function render()
     {
-        $totalOrmawa = Ormawa::when($this->periode, fn($q) => $q->where('periode', $this->periode))->count();
+        $totalOrmawa = Ormawa::where('kategori', '!=', 'UKM')->when($this->periode, fn($q) => $q->where('periode', $this->periode))->count();
+        $totalUkm = Ormawa::where('kategori', 'UKM')->when($this->periode, fn($q) => $q->where('periode', $this->periode))->count();
         $totalProker = Proker::when($this->periode, fn($q) => $q->whereHas('ormawa', fn($o) => $o->where('periode', $this->periode)))->count();
         $selesai = Proker::where('status', 'selesai')->when($this->periode, fn($q) => $q->whereHas('ormawa', fn($o) => $o->where('periode', $this->periode)))->count();
         $berjalan = Proker::where('status', 'berjalan')->when($this->periode, fn($q) => $q->whereHas('ormawa', fn($o) => $o->where('periode', $this->periode)))->count();
@@ -67,6 +68,7 @@ class Dashboard extends Component
 
         return view('livewire.admin.dashboard', [
             'totalOrmawa' => $totalOrmawa,
+            'totalUkm' => $totalUkm,
             'totalProker' => $totalProker,
             'selesai' => $selesai,
             'berjalan' => $berjalan,
