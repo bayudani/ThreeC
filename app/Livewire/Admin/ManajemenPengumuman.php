@@ -24,7 +24,8 @@ class ManajemenPengumuman extends Component
     public function openModal()
     {
         $this->resetValidation();
-        $this->reset(['judul', 'isi', 'tipe']);
+        $this->reset(['judul', 'isi']);
+        $this->tipe = 'info';
         $this->isModalOpen = true;
     }
 

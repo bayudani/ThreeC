@@ -176,39 +176,18 @@
             <div class="p-5 space-y-3 max-h-[480px] overflow-y-auto">
                 @forelse($pengumumans as $pengumuman)
                     @php
-                        $borderColor = match($pengumuman->tipe) {
-                            'mendesak' => 'border-l-rose-500',
-                            'info' => 'border-l-blue-500',
-                            'kegiatan' => 'border-l-emerald-500',
-                            default => 'border-l-slate-400',
-                        };
-                        $badgeColor = match($pengumuman->tipe) {
-                            'mendesak' => 'bg-rose-50 text-rose-700',
-                            'info' => 'bg-blue-50 text-blue-700',
-                            'kegiatan' => 'bg-emerald-50 text-emerald-700',
-                            default => 'bg-slate-50 text-slate-600',
-                        };
-                        $iconColor = match($pengumuman->tipe) {
-                            'mendesak' => 'text-rose-500',
-                            'info' => 'text-blue-500',
-                            'kegiatan' => 'text-emerald-500',
-                            default => 'text-slate-500',
+                        $type = match($pengumuman->tipe) {
+                            'mendesak' => ['dot' => 'bg-rose-500', 'text' => 'text-rose-600', 'label' => 'Mendesak'],
+                            'info' => ['dot' => 'bg-blue-500', 'text' => 'text-blue-600', 'label' => 'Info'],
+                            'kegiatan' => ['dot' => 'bg-emerald-500', 'text' => 'text-emerald-600', 'label' => 'Kegiatan'],
+                            default => ['dot' => 'bg-slate-400', 'text' => 'text-slate-500', 'label' => 'Info'],
                         };
                     @endphp
-                    <div class="bg-slate-50 rounded-xl border-l-4 {{ $borderColor }} border border-slate-200 p-4 hover:shadow-sm transition-shadow">
-                        <div class="flex items-start justify-between gap-2 mb-2">
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded {{ $badgeColor }}">
-                                <svg class="w-3 h-3 {{ $iconColor }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    @if($pengumuman->tipe === 'mendesak')
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01"></path>
-                                    @elseif($pengumuman->tipe === 'info')
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    @else
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                    @endif
-                                </svg>
-                                {{ ucfirst($pengumuman->tipe) }}
-                            </span>
+                    <div class="bg-white rounded-xl border border-slate-200 p-4 transition-all hover:border-slate-300 hover:shadow-sm">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2 h-2 rounded-full {{ $type['dot'] }}"></span>
+                            <span class="text-[11px] font-bold uppercase tracking-wide {{ $type['text'] }}">{{ $type['label'] }}</span>
+                            <span class="ml-auto text-[11px] text-slate-400">{{ $pengumuman->created_at->diffForHumans() }}</span>
                         </div>
                         <h4 class="text-sm font-bold text-slate-800 mb-1">{{ $pengumuman->judul }}</h4>
                         <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ $pengumuman->isi }}</p>

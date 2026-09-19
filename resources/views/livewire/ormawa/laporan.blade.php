@@ -19,7 +19,7 @@
     <div class="grid grid-cols-2 gap-4">
         <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
             <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Dokumen</p>
-            <p class="text-3xl font-bold text-indigo-700 mt-2">{{ $stats['total'] }}</p>
+            <p class="text-3xl font-bold text-blue-600 mt-2">{{ $stats['total'] }}</p>
         </div>
         <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
             <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Bulan Ini</p>

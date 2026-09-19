@@ -87,12 +87,14 @@ class Laporan extends Component
 
         $query = Dokumentasi::with(['proker.ormawa'])
             ->when($this->search, function ($q) {
-                $q->whereHas('proker', function ($sub) {
-                    $sub->where('nama_proker', 'like', '%' . $this->search . '%')
-                        ->orWhereHas('ormawa', function ($sub2) {
-                            $sub2->where('nama', 'like', '%' . $this->search . '%');
-                        });
-                })->orWhere('keterangan', 'like', '%' . $this->search . '%');
+                $q->where(function ($sub) {
+                    $sub->whereHas('proker', function ($sub2) {
+                        $sub2->where('nama_proker', 'like', '%' . $this->search . '%')
+                            ->orWhereHas('ormawa', function ($sub3) {
+                                $sub3->where('nama', 'like', '%' . $this->search . '%');
+                            });
+                    })->orWhere('keterangan', 'like', '%' . $this->search . '%');
+                });
             })
             ->when($this->filterOrmawa, function ($q) {
                 $q->whereHas('proker', function ($sub) {

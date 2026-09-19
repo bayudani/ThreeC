@@ -65,13 +65,13 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+        <div class="bg-blue-600 border-blue-700 rounded-xl border shadow-md p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center">
+                <div class="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold text-white/80 uppercase tracking-wider">Success Rate</p>
+                    <p class="text-xs font-semibold text-blue-100 uppercase tracking-wider">Success Rate</p>
                     <p class="text-2xl font-bold text-white mt-0.5">{{ $stats['successRate'] }}%</p>
                 </div>
             </div>

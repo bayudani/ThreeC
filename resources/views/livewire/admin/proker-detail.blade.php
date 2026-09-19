@@ -71,12 +71,12 @@
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Progress</h3>
-                    <span class="text-2xl font-bold {{ $proker->progress >= 100 ? 'text-emerald-600' : $proker->progress >= 50 ? 'text-blue-600' : 'text-slate-500' }}">{{ $proker->progress }}%</span>
+                    <span class="text-2xl font-bold {{ $proker->progress >= 100 ? 'text-emerald-600' : ($proker->progress >= 50 ? 'text-blue-600' : 'text-slate-500') }}">{{ $proker->progress }}%</span>
                 </div>
 
                 <div class="space-y-2 mb-6">
                     <div class="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
-                        <div class="h-3.5 rounded-full transition-all duration-700 ease-out {{ $proker->progress >= 100 ? 'bg-emerald-500' : $proker->progress >= 50 ? 'bg-blue-500' : 'bg-slate-400' }}" style="width: {{ $proker->progress }}%"></div>
+                        <div class="h-3.5 rounded-full transition-all duration-700 ease-out {{ $proker->progress >= 100 ? 'bg-emerald-500' : ($proker->progress >= 50 ? 'bg-blue-500' : 'bg-slate-400') }}" style="width: {{ $proker->progress }}%"></div>
                     </div>
                     <div class="flex justify-between text-xs text-slate-400">
                         <span>0%</span>

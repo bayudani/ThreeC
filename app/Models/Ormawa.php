@@ -1,14 +1,14 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Append;
+use Illuminate\Database\Eloquent\Attributes\Appends;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 #[Fillable(['nama', 'kategori', 'fakultas', 'periode', 'logo'])]
-#[Append('admin_password')]
+#[Appends('admin_password')]
 class Ormawa extends Model
 {
     public function users(): HasMany {

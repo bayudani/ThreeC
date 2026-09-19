@@ -6,11 +6,11 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
 use App\Models\Ormawa;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 #[Layout('layouts.app')]
 class ManajemenOrmawa extends Component
@@ -46,7 +46,7 @@ class ManajemenOrmawa extends Component
     protected function rules()
     {
         return [
-            'nama' => 'required|string|max:255',
+            'nama' => ['required', 'string', 'max:255', Rule::unique('ormawas', 'nama')->ignore($this->editId)],
             'kategori' => 'required|string|max:50',
             'fakultas' => 'nullable|string|max:255',
             'periode' => 'nullable|string|max:50',
@@ -116,8 +116,8 @@ class ManajemenOrmawa extends Component
         } else {
             $ormawa = Ormawa::create($data);
 
-            $username = strtolower(str_replace(' ', '', $ormawa->nama));
-            $password = $username . 'unsera@26';
+            $username = $this->generateUsername($ormawa->nama);
+            $password = $username . '@unsera26';
 
             User::create([
                 'name' => "Admin {$ormawa->nama}",
@@ -131,6 +131,23 @@ class ManajemenOrmawa extends Component
         }
 
         $this->resetForm();
+    }
+
+    private function generateUsername(string $nama): string
+    {
+        $base = strtolower(preg_replace('/[^a-z0-9]/i', '', $nama));
+        if ($base === '') {
+            $base = 'ormawa';
+        }
+
+        $username = $base;
+        $i = 1;
+        while (User::where('username', $username)->exists()) {
+            $username = $base . $i;
+            $i++;
+        }
+
+        return $username;
     }
 
     public function batal()

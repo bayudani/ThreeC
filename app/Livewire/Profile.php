@@ -5,7 +5,6 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 #[Layout('layouts.app')]
 class Profile extends Component
@@ -30,13 +29,13 @@ class Profile extends Component
         $this->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . Auth::id(),
-            'email' => 'required|email|max:255|unique:users,email,' . Auth::id(),
+            'email' => 'nullable|email|max:255|unique:users,email,' . Auth::id(),
         ]);
 
         Auth::user()->update([
             'name' => $this->name,
             'username' => $this->username,
-            'email' => $this->email,
+            'email' => $this->email ?: null,
         ]);
 
         session()->flash('success', 'Profil berhasil diperbarui.');
@@ -50,7 +49,7 @@ class Profile extends Component
         ]);
 
         Auth::user()->update([
-            'password' => Hash::make($this->new_password),
+            'password' => $this->new_password,
         ]);
 
         $this->current_password = null;

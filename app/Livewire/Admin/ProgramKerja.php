@@ -75,10 +75,12 @@ class ProgramKerja extends Component
     {
         $query = Proker::with('ormawa')
             ->when($this->search, function ($q) {
-                $q->where('nama_proker', 'like', '%' . $this->search . '%')
-                  ->orWhereHas('ormawa', function ($subQ) {
-                      $subQ->where('nama', 'like', '%' . $this->search . '%');
-                  });
+                $q->where(function ($sub) {
+                    $sub->where('nama_proker', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('ormawa', function ($subQ) {
+                            $subQ->where('nama', 'like', '%' . $this->search . '%');
+                        });
+                });
             })
             ->when($this->filterStatus, function ($q) {
                 if ($this->filterStatus === 'menunggu_validasi') {

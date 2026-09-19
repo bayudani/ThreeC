@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             OrmawaSeeder::class,
-            ProkerSeeder::class,
+            // ProkerSeeder::class,
         ]);
 
         User::create([

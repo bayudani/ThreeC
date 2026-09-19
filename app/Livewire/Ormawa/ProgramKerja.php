@@ -156,11 +156,14 @@ class ProgramKerja extends Component
         $this->validateOnly('file_bukti');
         $this->validateOnly('keterangan_file');
 
+        // Pastikan proker milik ormawa yang sedang login (cegah IDOR)
+        $proker = Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($this->proker_id);
+
         // Simpan file ke folder storage/app/public/dokumentasi
         $path = $this->file_bukti->store('dokumentasi', 'public');
 
         Dokumentasi::create([
-            'proker_id' => $this->proker_id,
+            'proker_id' => $proker->id,
             'file_path' => $path,
             'keterangan' => $this->keterangan_file
         ]);
@@ -183,8 +186,8 @@ class ProgramKerja extends Component
 
         $prokers = Proker::with('dokumentasis')
             ->where('ormawa_id', $ormawaId)
-            ->when($this->search, function($query) {
-                $query->where('nama_proker', 'like', '%'.$this->search.'%');
+            ->when($this->search, function ($query) {
+                $query->where('nama_proker', 'like', '%' . $this->search . '%');
             })
             ->latest()
             ->paginate(10);

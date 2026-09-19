@@ -5,7 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ config('app.name', 'Three-C') }} | Login</title>
-        
+
+        <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
         
@@ -43,9 +46,9 @@
 
                 <div class="w-full max-w-md relative z-10">
                     <div class="text-center mb-10 lg:hidden">
-                        <div class="w-20 h-20 bg-white flex items-center justify-center rounded-2xl shadow-sm border border-slate-200 mx-auto mb-5">
+                        {{-- <div class="w-20 h-20 bg-white flex items-center justify-center rounded-2xl shadow-sm border border-slate-200 mx-auto mb-5">
                             <span class="text-2xl font-extrabold text-blue-600 tracking-tight">TC</span>
-                        </div>
+                        </div> --}}
                         <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Three<span class="text-blue-600">C</span></h1>
                         <p class="text-sm font-bold text-slate-500 mt-2 tracking-wide uppercase">Cakra Control Center</p>
                     </div>
