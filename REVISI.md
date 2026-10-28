@@ -25,10 +25,10 @@
 - [x] **B2.1** - Rename "Evaluasi & Monev" → "Monitoring" di sidebar & header
 
 ### B3. Halaman Manajemen Ormawa/UKM
-- [ ] **B3.1** - Dropdown fakultas (dari tabel `fakultas`)
-- [ ] **B3.2** - Dropdown periode (2024-2025 s/d 2034-2035, hardcode)
-- [ ] **B3.3** - Semua field required (nama, kategori, fakultas, periode)
-- [ ] **B3.4** - Form UKM: fakultas auto-hide (set ke "Universitas"), periode opsional
+- [x] **B3.1** - Dropdown fakultas (dari tabel `fakultas`)
+- [x] **B3.2** - Dropdown periode (2024-2025 s/d 2034-2035, hardcode)
+- [x] **B3.3** - Semua field required (nama, kategori, fakultas, periode)
+- [x] **B3.4** - Form UKM: fakultas auto-hide (set ke "Universitas"), periode opsional
 - [ ] **B3.5** - Validasi deskripsi proker wajib diisi
 
 ### B4. CRUD Fakultas (New)
@@ -83,7 +83,7 @@
 
 ## Progress Summary
 - **Total:** 36 tasks
-- **Done:** 11 tasks (30.6%)
-- **Remaining:** 25 tasks
+- **Done:** 15 tasks (41.7%)
+- **Remaining:** 21 tasks
 
-**Last Updated:** 2026-10-28 13:44 WIB
+**Last Updated:** 2026-10-28 13:50 WIB
