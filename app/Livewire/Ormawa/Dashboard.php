@@ -17,10 +17,10 @@ class Dashboard extends Component
     #[Rule('required|min:5', message: 'Nama program kerja minimal 5 karakter.')]
     public $nama_proker;
 
-    #[Rule('nullable|string', message: 'Deskripsi harus berupa teks.')]
+    #[Rule('required|string|min:10', message: 'Deskripsi wajib diisi minimal 10 karakter.')]
     public $deskripsi;
 
-    #[Rule('required|date', message: 'Target waktu wajib diisi dengan format tanggal.')]
+    #[Rule('required|date|after_or_equal:today', message: 'Target waktu wajib diisi dan minimal hari ini.')]
     public $target_waktu;
 
     public function openModal()
@@ -46,6 +46,7 @@ class Dashboard extends Component
             'nama_proker' => $this->nama_proker,
             'deskripsi' => $this->deskripsi,
             'target_waktu' => $this->target_waktu,
+            'tahapan_saat_ini' => 'perencanaan',
             'status' => 'belum_dimulai',
             'progress' => 0,
             'validated_at' => null,

@@ -103,19 +103,29 @@
             <div class="divide-y divide-slate-100">
                 @forelse($prokerTerkini as $proker)
                     @php
-                        $barColor = match($proker->status) {
+                        // Gunakan computed accessor untuk status dinamis
+                        $computedStatus = $proker->computed_status;
+                        $computedProgress = $proker->computed_progress;
+                        
+                        $barColor = match($computedStatus) {
                             'selesai' => 'bg-emerald-500',
                             'berjalan' => 'bg-blue-500',
+                            'ditolak' => 'bg-red-500',
+                            'menunggu_persetujuan' => 'bg-amber-500',
                             default => 'bg-slate-400',
                         };
-                        $badgeColor = match($proker->status) {
+                        $badgeColor = match($computedStatus) {
                             'selesai' => 'bg-emerald-50 text-emerald-700 border border-emerald-200',
                             'berjalan' => 'bg-blue-50 text-blue-700 border border-blue-200',
+                            'ditolak' => 'bg-red-50 text-red-700 border border-red-200',
+                            'menunggu_persetujuan' => 'bg-amber-50 text-amber-700 border border-amber-200',
                             default => 'bg-slate-50 text-slate-600 border border-slate-200',
                         };
-                        $label = match($proker->status) {
+                        $label = match($computedStatus) {
                             'selesai' => 'Selesai',
                             'berjalan' => 'Berjalan',
+                            'ditolak' => 'Ditolak',
+                            'menunggu_persetujuan' => 'Menunggu Persetujuan',
                             default => 'Belum Dimulai',
                         };
                     @endphp
@@ -135,9 +145,9 @@
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
-                                <div class="{{ $barColor }} h-2 rounded-full transition-all duration-500" style="width: {{ $proker->progress }}%"></div>
+                                <div class="{{ $barColor }} h-2 rounded-full transition-all duration-500" style="width: {{ $computedProgress }}%"></div>
                             </div>
-                            <span class="text-xs font-bold text-slate-600 tabular-nums">{{ $proker->progress }}%</span>
+                            <span class="text-xs font-bold text-slate-600 tabular-nums">{{ $computedProgress }}%</span>
                         </div>
                     </div>
                 @empty
@@ -232,7 +242,7 @@
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-semibold text-slate-700">Target Pelaksanaan <span class="text-red-500">*</span></label>
-                        <input wire:model="target_waktu" type="date" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block w-full p-2.5 transition-all">
+                        <input wire:model="target_waktu" type="date" min="{{ date('Y-m-d') }}" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block w-full p-2.5 transition-all">
                         @error('target_waktu') <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
                     </div>
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
