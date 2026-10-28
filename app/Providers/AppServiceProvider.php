@@ -24,5 +24,13 @@ class AppServiceProvider extends ServiceProvider
         if (str_contains(config('app.url'), 'https://')) {
             URL::forceScheme('https');
         }
+
+        // Share kontak admin ke semua view untuk footer
+        view()->composer('*', function ($view) {
+            $kontaks = \App\Models\KontakAdmin::where('is_active', true)
+                ->orderBy('urutan')
+                ->get();
+            $view->with('footerKontaks', $kontaks);
+        });
     }
 }

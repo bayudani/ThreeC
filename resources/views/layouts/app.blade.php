@@ -27,6 +27,8 @@
             <div class="flex-1 overflow-y-auto p-8 bg-[#F8FAFC]">
                 {{ $slot }}
             </div>
+
+            <x-footer />
         </main>
 
         @livewireScripts
