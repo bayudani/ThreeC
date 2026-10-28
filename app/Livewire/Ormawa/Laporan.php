@@ -92,8 +92,10 @@ class Laporan extends Component
         $query = Dokumentasi::whereHas('proker', fn($q) => $q->where('ormawa_id', $ormawaId))
             ->with(['proker'])
             ->when($this->search, function ($q) {
-                $q->whereHas('proker', fn($sub) => $sub->where('nama_proker', 'like', "%{$this->search}%"))
-                  ->orWhere('keterangan', 'like', "%{$this->search}%");
+                $q->where(function ($sub) {
+                    $sub->whereHas('proker', fn($innerSub) => $innerSub->where('nama_proker', 'like', "%{$this->search}%"))
+                        ->orWhere('keterangan', 'like', "%{$this->search}%");
+                });
             })
             ->when($this->filterProker, fn($q) => $q->where('proker_id', $this->filterProker));
 

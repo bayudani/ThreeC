@@ -19,6 +19,9 @@ class ProgramKerja extends Component
     public $rejectProkerId = null;
     public $rejection_reason = '';
 
+    public $showDetailModal = false;
+    public $detailProker = null;
+
     public function updatingSearch()
     {
         $this->resetPage();
@@ -53,6 +56,40 @@ class ProgramKerja extends Component
         $this->showRejectModal = false;
         $this->rejectProkerId = null;
         $this->rejection_reason = '';
+    }
+
+    public function openDetailModal($id)
+    {
+        $this->detailProker = Proker::with('ormawa')->findOrFail($id);
+        $this->showDetailModal = true;
+    }
+
+    public function closeDetailModal()
+    {
+        $this->showDetailModal = false;
+        $this->detailProker = null;
+    }
+
+    public function approveFromDetail()
+    {
+        if ($this->detailProker && $this->detailProker->isPending()) {
+            $this->detailProker->update([
+                'validated_at' => now(),
+                'status' => 'berjalan',
+                'rejection_reason' => null,
+            ]);
+            $this->closeDetailModal();
+            session()->flash('success', 'Program kerja berhasil divalidasi!');
+        }
+    }
+
+    public function rejectFromDetail()
+    {
+        if ($this->detailProker && $this->detailProker->isPending()) {
+            $this->rejectProkerId = $this->detailProker->id;
+            $this->closeDetailModal();
+            $this->openRejectModal($this->rejectProkerId);
+        }
     }
 
     public function rejectProker()

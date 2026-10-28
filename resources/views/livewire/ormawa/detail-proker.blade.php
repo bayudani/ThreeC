@@ -58,6 +58,11 @@
                     Update Progress Pelaksanaan
                 </h3>
 
+                <div class="mb-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                    <p class="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">Tahapan Saat Ini</p>
+                    <p class="text-sm font-bold text-blue-800 capitalize">{{ str_replace('_', ' ', $proker->tahapan_saat_ini) }}</p>
+                </div>
+
                 @if (session()->has('success_progress'))
                     <div class="p-3 mb-4 text-sm text-green-800 rounded-lg bg-green-50 border border-green-200 flex items-center gap-2">
                         <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -65,29 +70,34 @@
                     </div>
                 @endif
 
+                {{-- Progress Bar (Read-only, auto dari tahapan) --}}
+                <div class="mb-6">
+                    <div class="flex justify-between items-end mb-2">
+                        <label class="block text-sm font-semibold text-slate-700">Progress Otomatis</label>
+                        <span class="text-2xl font-black {{ $progress == 100 ? 'text-green-600' : 'text-blue-600' }}">{{ $progress }}%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500 {{ $progress == 100 ? 'bg-emerald-500' : 'bg-blue-500' }}" style="width: {{ $progress }}%"></div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">Progress dihitung otomatis berdasarkan tahapan yang dipilih</p>
+                </div>
+
                 <form wire:submit.prevent="updateProgress" class="space-y-6">
                     <div>
-                        <div class="flex justify-between items-end mb-2">
-                            <label class="block text-sm font-semibold text-slate-700">Persentase Penyelesaian</label>
-                            <span class="text-2xl font-black {{ $progress == 100 ? 'text-green-600' : 'text-blue-600' }}">{{ $progress }}%</span>
-                        </div>
-                        <input wire:model.live="progress" type="range" min="0" max="100" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                        <label class="block mb-2 text-sm font-semibold text-slate-700">Pilih Tahapan Saat Ini <span class="text-red-500">*</span></label>
+                        <select wire:model.live="tahapan_saat_ini" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="perencanaan">Perencanaan (0%)</option>
+                            <option value="persiapan">Persiapan (25%)</option>
+                            <option value="pelaksanaan">Pelaksanaan (50%)</option>
+                            <option value="evaluasi">Evaluasi (75%)</option>
+                            <option value="selesai">Selesai (100%)</option>
+                        </select>
                     </div>
 
-                    <div class="flex gap-4 items-end">
-                        <div class="flex-1">
-                            <label class="block mb-2 text-sm font-semibold text-slate-700">Status Saat Ini</label>
-                            <select wire:model="status" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option value="belum_dimulai">Belum Dimulai</option>
-                                <option value="berjalan">Sedang Berjalan</option>
-                                <option value="selesai">Selesai</option>
-                            </select>
-                        </div>
-                        <button type="submit" wire:loading.attr="disabled" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.97] text-white text-sm font-medium rounded-lg transition-all flex items-center gap-2">
-                            <span wire:loading.remove wire:target="updateProgress">Simpan Progress</span>
-                            <span wire:loading wire:target="updateProgress" style="display: none;">Menyimpan...</span>
-                        </button>
-                    </div>
+                    <button type="submit" wire:loading.attr="disabled" class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.97] text-white text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2">
+                        <span wire:loading.remove wire:target="updateProgress">Update Tahapan</span>
+                        <span wire:loading wire:target="updateProgress" style="display: none;">Menyimpan...</span>
+                    </button>
                 </form>
             </div>
         </div>

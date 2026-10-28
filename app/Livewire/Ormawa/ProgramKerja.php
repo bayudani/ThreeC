@@ -3,7 +3,6 @@
 namespace App\Livewire\Ormawa;
 
 use Livewire\Component;
-use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
@@ -14,7 +13,7 @@ use App\Models\Dokumentasi;
 #[Layout('layouts.app')]
 class ProgramKerja extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithFileUploads;
 
     public $search = '';
 
@@ -81,8 +80,6 @@ class ProgramKerja extends Component
     // ==========================================
     // LOGIKA PROGRESS (UPDATE TAHAPAN)
     // ==========================================
-    public $tahapan_saat_ini;
-
     public function openProgressModal($id)
     {
         $proker = Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($id);
@@ -172,11 +169,6 @@ class ProgramKerja extends Component
     // ==========================================
     // RENDER VIEW
     // ==========================================
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
     public function render()
     {
         $ormawaId = Auth::user()->ormawa_id;
@@ -187,7 +179,7 @@ class ProgramKerja extends Component
                 $query->where('nama_proker', 'like', '%' . $this->search . '%');
             })
             ->latest()
-            ->paginate(10);
+            ->get();
 
         $totalProker = Proker::where('ormawa_id', $ormawaId)->count();
         $selesai = Proker::where('ormawa_id', $ormawaId)->where('status', 'selesai')->count();

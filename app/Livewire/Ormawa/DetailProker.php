@@ -18,9 +18,9 @@ class DetailProker extends Component
 
     public Proker $proker;
     
-    // State Progress
+    // State Progress (computed dari tahapan)
+    public $tahapan_saat_ini = 'perencanaan';
     public $progress = 0;
-    public $status = 'belum_dimulai';
 
     // State Upload
     #[Rule('required|file|mimes:jpg,jpeg,png,pdf|max:5120', message: 'File maksimal 5MB (JPG/PNG/PDF)')]
@@ -34,8 +34,21 @@ class DetailProker extends Component
         // Pastikan proker ini hanya bisa diakses oleh ormawa yang bersangkutan
         $this->proker = Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($id);
         
+        $this->tahapan_saat_ini = $this->proker->tahapan_saat_ini;
         $this->progress = $this->proker->progress;
-        $this->status = $this->proker->status;
+    }
+
+    public function updatedTahapanSaatIni($value)
+    {
+        // Auto-update progress berdasarkan tahapan
+        $this->progress = match($value) {
+            'perencanaan' => 0,
+            'persiapan' => 25,
+            'pelaksanaan' => 50,
+            'evaluasi' => 75,
+            'selesai' => 100,
+            default => 0,
+        };
     }
 
     public function updateProgress()
@@ -50,19 +63,17 @@ class DetailProker extends Component
         }
 
         $this->validate([
-            'progress' => 'required|numeric|min:0|max:100',
-            'status' => 'required|in:belum_dimulai,berjalan,selesai'
+            'tahapan_saat_ini' => 'required|in:perencanaan,persiapan,pelaksanaan,evaluasi,selesai'
         ]);
 
-        if ($this->progress == 100) $this->status = 'selesai';
-        if ($this->progress > 0 && $this->progress < 100 && $this->status == 'belum_dimulai') $this->status = 'berjalan';
-
+        // Update tahapan, progress, dan status otomatis
         $this->proker->update([
-            'progress' => $this->progress,
-            'status' => $this->status
+            'tahapan_saat_ini' => $this->tahapan_saat_ini,
+            'progress' => $this->proker->computed_progress,
+            'status' => $this->proker->computed_status,
         ]);
 
-        session()->flash('success_progress', 'Progress berhasil diperbarui!');
+        session()->flash('success_progress', 'Tahapan berhasil diperbarui!');
     }
 
     public function uploadDokumen()

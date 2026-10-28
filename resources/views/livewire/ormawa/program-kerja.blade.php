@@ -223,10 +223,6 @@
         </div>
     </div>
 
-    <div class="pt-2">
-        {{ $prokers->links(data: ['scrollTo' => false]) }}
-    </div>
-
     {{-- Modal Update Tahapan --}}
     @if($isProgressModalOpen)
         <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" wire:key="progress-modal">
@@ -379,7 +375,7 @@
                         @error('nama_proker') <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700">Deskripsi Singkat (Opsional)</label>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700">Deskripsi Singkat <span class="text-red-500">*</span></label>
                         <textarea wire:model="deskripsi" rows="3" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block w-full p-2.5 transition-all" placeholder="Jelaskan secara singkat tujuan program kerja ini..."></textarea>
                         @error('deskripsi') <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
                     </div>

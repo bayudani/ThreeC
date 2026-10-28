@@ -74,6 +74,11 @@
                     <span class="text-2xl font-bold {{ $proker->progress >= 100 ? 'text-emerald-600' : ($proker->progress >= 50 ? 'text-blue-600' : 'text-slate-500') }}">{{ $proker->progress }}%</span>
                 </div>
 
+                <div class="mb-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                    <p class="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">Tahapan Saat Ini</p>
+                    <p class="text-sm font-bold text-blue-800 capitalize">{{ str_replace('_', ' ', $proker->tahapan_saat_ini) }}</p>
+                </div>
+
                 <div class="space-y-2 mb-6">
                     <div class="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
                         <div class="h-3.5 rounded-full transition-all duration-700 ease-out {{ $proker->progress >= 100 ? 'bg-emerald-500' : ($proker->progress >= 50 ? 'bg-blue-500' : 'bg-slate-400') }}" style="width: {{ $proker->progress }}%"></div>

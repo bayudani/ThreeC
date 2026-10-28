@@ -193,7 +193,7 @@
                             default => ['dot' => 'bg-slate-400', 'text' => 'text-slate-500', 'label' => 'Info'],
                         };
                     @endphp
-                    <div class="bg-white rounded-xl border border-slate-200 p-4 transition-all hover:border-slate-300 hover:shadow-sm">
+                    <button wire:click="openPengumumanModal({{ $pengumuman->id }})" class="w-full bg-white rounded-xl border border-slate-200 p-4 transition-all hover:border-slate-300 hover:shadow-sm text-left">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="w-2 h-2 rounded-full {{ $type['dot'] }}"></span>
                             <span class="text-[11px] font-bold uppercase tracking-wide {{ $type['text'] }}">{{ $type['label'] }}</span>
@@ -201,7 +201,7 @@
                         </div>
                         <h4 class="text-sm font-bold text-slate-800 mb-1">{{ $pengumuman->judul }}</h4>
                         <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ $pengumuman->isi }}</p>
-                    </div>
+                    </button>
                 @empty
                     <div class="text-center py-10">
                         <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
@@ -236,7 +236,7 @@
                         @error('nama_proker') <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700">Deskripsi Singkat (Opsional)</label>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700">Deskripsi Singkat <span class="text-red-500">*</span></label>
                         <textarea wire:model="deskripsi" rows="3" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block w-full p-2.5 transition-all" placeholder="Jelaskan secara singkat tujuan program kerja ini..."></textarea>
                         @error('deskripsi') <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
                     </div>
@@ -255,6 +255,50 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    @endif
+
+    {{-- MODAL PENGUMUMAN DETAIL --}}
+    @if($showPengumumanModal && $selectedPengumuman)
+        @php
+            $modalType = match($selectedPengumuman->tipe) {
+                'mendesak' => ['bg' => 'bg-rose-100', 'icon' => 'text-rose-600', 'badge' => 'bg-rose-50 text-rose-700 border-rose-200', 'dot' => 'bg-rose-500', 'label' => 'Mendesak'],
+                'kegiatan' => ['bg' => 'bg-emerald-100', 'icon' => 'text-emerald-600', 'badge' => 'bg-emerald-50 text-emerald-700 border-emerald-200', 'dot' => 'bg-emerald-500', 'label' => 'Kegiatan'],
+                default => ['bg' => 'bg-blue-100', 'icon' => 'text-blue-600', 'badge' => 'bg-blue-50 text-blue-700 border-blue-200', 'dot' => 'bg-blue-500', 'label' => 'Info'],
+            };
+        @endphp
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" wire:key="pengumuman-modal">
+            <div class="relative w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-slate-200">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 {{ $modalType['bg'] }} rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 {{ $modalType['icon'] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-800">Pengumuman</h3>
+                    </div>
+                    <button wire:click="closePengumumanModal" class="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg {{ $modalType['badge'] }} border">
+                            <span class="w-1.5 h-1.5 rounded-full {{ $modalType['dot'] }}"></span>
+                            {{ $modalType['label'] }}
+                        </span>
+                        <span class="text-xs text-slate-400">{{ $selectedPengumuman->created_at->translatedFormat('d F Y, H:i') }}</span>
+                    </div>
+                    <h4 class="text-xl font-bold text-slate-900 leading-tight break-words">{{ $selectedPengumuman->judul }}</h4>
+                    <div class="prose prose-sm prose-slate max-w-none">
+                        <p class="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap break-words">{{ $selectedPengumuman->isi }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-end px-6 py-4 border-t border-slate-200">
+                    <button wire:click="closePengumumanModal" class="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-all">
+                        Tutup
+                    </button>
+                </div>
             </div>
         </div>
     @endif

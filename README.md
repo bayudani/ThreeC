@@ -186,7 +186,7 @@ Bantuan sebaran peran di middleware: `app/Http/Middleware/CheckRole.php`.
 - `/` dan `/dashboard` adalah redirector pintar berdasarkan role & status autentikasi
 
 ### 2. Alur data ormawa (admin kampus)
-1. Admin menambah ormawa/UKM → sistem otomatis membuat akun `admin_ormawa` (username = nama tanpa spasi, password pola `{username}unsera@26`)
+1. Admin menambah ormawa/UKM → sistem otomatis membuat akun `admin_ormawa` (username = nama tanpa spasi, password pola `{username}@unsera26`)
 2. Akun & password bisa dilihat/ditampilkan di tabel/card ("lihat password" toggle)
 3. Menghapus ormawa → akun dan data terkait ikut terhapus
 
@@ -412,7 +412,7 @@ Seeder membuat akun berikut (hanya untuk pengembangan lokal):
 | Role | Username | Password |
 |---|---|---|
 | **Admin Kampus** (`admin_kampus`) | `adminkampus` | `password123` |
-| **Admin Ormawa** (`admin_ormawa`) | `himatif`, `bemu`, `dpmu`, ... (30 org) | `{username}unsera@26` |
+| **Admin Ormawa** (`admin_ormawa`) | `himatif`, `bemu`, `dpmu`, ... (30 org) | `{username}@unsera26` |
 
 > ⚠️ Ubah kredensial ini sebelum production.
 

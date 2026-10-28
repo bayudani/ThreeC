@@ -153,7 +153,10 @@
                         <tr wire:key="proker-{{ $proker->id }}" class="hover:bg-slate-50/80 transition-colors duration-150">
                             <td class="px-6 py-4">
                                 <p class="font-semibold text-slate-800">{{ $proker->nama_proker }}</p>
-                                <p class="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
+                                @if($proker->deskripsi)
+                                    <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">{{ $proker->deskripsi }}</p>
+                                @endif
+                                <p class="text-xs text-slate-400 mt-1.5 flex items-center gap-1.5">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     Target: {{ \Carbon\Carbon::parse($proker->target_waktu)->translatedFormat('d M Y') }}
                                 </p>
@@ -186,13 +189,9 @@
                             <td class="px-6 py-4 text-right">
                                 <div class="flex items-center justify-end gap-1.5">
                                     @if($isPendingProker)
-                                        <button wire:click="approveProker({{ $proker->id }})" class="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold rounded-lg transition-all" title="Setujui">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                                            Setujui
-                                        </button>
-                                        <button wire:click="openRejectModal({{ $proker->id }})" class="inline-flex items-center gap-1 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded-lg transition-all" title="Tolak">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                            Tolak
+                                        <button wire:click="openDetailModal({{ $proker->id }})" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-all">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                            Lihat & Validasi
                                         </button>
                                     @elseif($isRejectedProker)
                                         <span class="text-xs text-red-500 font-medium">Ditolak</span>
@@ -227,6 +226,112 @@
     @if($prokers->hasPages())
         <div class="pt-2">
             {{ $prokers->links(data: ['scrollTo' => false]) }}
+        </div>
+    @endif
+
+    {{-- Modal Detail Proker --}}
+    @if($showDetailModal && $detailProker)
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" wire:key="detail-modal">
+            <div class="relative w-full max-w-3xl bg-white rounded-2xl shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+                <div class="sticky top-0 flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-white rounded-t-2xl z-10">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-800">Detail Program Kerja</h3>
+                    </div>
+                    <button wire:click="closeDetailModal" class="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    {{-- Header Info --}}
+                    <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-sm shrink-0">
+                            {{ substr($detailProker->ormawa->nama ?? '?', 0, 1) }}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-slate-800 text-lg mb-1">{{ $detailProker->nama_proker }}</h4>
+                            <p class="text-sm text-slate-600">{{ $detailProker->ormawa->nama ?? '-' }}</p>
+                            <p class="text-xs text-slate-400 mt-1">{{ $detailProker->ormawa->kategori ?? '-' }} • {{ $detailProker->ormawa->fakultas->nama ?? 'Universitas' }}</p>
+                        </div>
+                        @php
+                            $isPending = $detailProker->isPending();
+                            $isRejected = $detailProker->isRejected();
+                            if ($isPending) {
+                                $badge = ['bg' => 'bg-amber-50', 'text' => 'text-amber-700', 'border' => 'border-amber-200', 'dot' => 'bg-amber-500', 'label' => 'Menunggu Validasi'];
+                            } elseif ($isRejected) {
+                                $badge = ['bg' => 'bg-red-50', 'text' => 'text-red-700', 'border' => 'border-red-200', 'dot' => 'bg-red-500', 'label' => 'Ditolak'];
+                            } else {
+                                $badge = match($detailProker->status) {
+                                    'selesai' => ['bg' => 'bg-emerald-50', 'text' => 'text-emerald-700', 'border' => 'border-emerald-200', 'dot' => 'bg-emerald-500', 'label' => 'Selesai'],
+                                    'berjalan' => ['bg' => 'bg-blue-50', 'text' => 'text-blue-700', 'border' => 'border-blue-200', 'dot' => 'bg-blue-500', 'label' => 'Berjalan'],
+                                    default => ['bg' => 'bg-slate-50', 'text' => 'text-slate-600', 'border' => 'border-slate-200', 'dot' => 'bg-slate-400', 'label' => 'Belum Dimulai'],
+                                };
+                            }
+                        @endphp
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg {{ $badge['bg'] }} {{ $badge['text'] }} border {{ $badge['border'] }}">
+                            <span class="w-1.5 h-1.5 rounded-full {{ $badge['dot'] }}"></span>
+                            {{ $badge['label'] }}
+                        </span>
+                    </div>
+
+                    {{-- Detail Grid --}}
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-white border border-slate-200 rounded-xl">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Target Waktu</p>
+                            <p class="text-sm font-bold text-slate-800">{{ \Carbon\Carbon::parse($detailProker->target_waktu)->translatedFormat('d F Y') }}</p>
+                        </div>
+                        <div class="p-4 bg-white border border-slate-200 rounded-xl">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tahapan Saat Ini</p>
+                            <p class="text-sm font-bold text-slate-800 capitalize">{{ str_replace('_', ' ', $detailProker->tahapan_saat_ini) }}</p>
+                        </div>
+                        <div class="p-4 bg-white border border-slate-200 rounded-xl">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Progress</p>
+                            <p class="text-sm font-bold text-slate-800">{{ $detailProker->progress }}%</p>
+                        </div>
+                        <div class="p-4 bg-white border border-slate-200 rounded-xl">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Dokumentasi</p>
+                            <p class="text-sm font-bold text-slate-800">{{ $detailProker->dokumentasis->count() }} file</p>
+                        </div>
+                    </div>
+
+                    {{-- Deskripsi --}}
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Deskripsi Program</p>
+                        <p class="text-sm text-slate-700 leading-relaxed">{{ $detailProker->deskripsi ?: 'Tidak ada deskripsi.' }}</p>
+                    </div>
+
+                    @if($isRejected && $detailProker->rejection_reason)
+                        <div class="p-4 bg-red-50 border border-red-200 rounded-xl">
+                            <p class="text-xs font-semibold text-red-700 uppercase tracking-wider mb-2">Alasan Penolakan</p>
+                            <p class="text-sm text-red-600 leading-relaxed">{{ $detailProker->rejection_reason }}</p>
+                        </div>
+                    @endif
+                </div>
+
+                @if($isPending)
+                    <div class="sticky bottom-0 flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 bg-white rounded-b-2xl">
+                        <button wire:click="closeDetailModal" class="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-all">
+                            Tutup
+                        </button>
+                        <button wire:click="rejectFromDetail" class="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 active:scale-[0.97] rounded-lg transition-all shadow-sm">
+                            Tolak
+                        </button>
+                        <button wire:click="approveFromDetail" wire:loading.attr="disabled" class="px-5 py-2.5 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-[0.97] rounded-lg transition-all shadow-sm">
+                            <span wire:loading.remove>Setujui Program</span>
+                            <span wire:loading style="display: none;">Memproses...</span>
+                        </button>
+                    </div>
+                @else
+                    <div class="sticky bottom-0 flex items-center justify-end px-6 py-4 border-t border-slate-200 bg-white rounded-b-2xl">
+                        <button wire:click="closeDetailModal" class="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-all">
+                            Tutup
+                        </button>
+                    </div>
+                @endif
+            </div>
         </div>
     @endif
 

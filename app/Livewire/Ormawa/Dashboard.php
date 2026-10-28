@@ -23,6 +23,9 @@ class Dashboard extends Component
     #[Rule('required|date|after_or_equal:today', message: 'Target waktu wajib diisi dan minimal hari ini.')]
     public $target_waktu;
 
+    public $showPengumumanModal = false;
+    public $selectedPengumuman = null;
+
     public function openModal()
     {
         $this->resetValidation();
@@ -55,6 +58,18 @@ class Dashboard extends Component
         // 3. Tutup modal & beri notifikasi
         $this->closeModal();
         session()->flash('success', 'Program kerja berhasil didaftarkan! Silakan pantau progresnya.');
+    }
+
+    public function openPengumumanModal($id)
+    {
+        $this->selectedPengumuman = Pengumuman::findOrFail($id);
+        $this->showPengumumanModal = true;
+    }
+
+    public function closePengumumanModal()
+    {
+        $this->showPengumumanModal = false;
+        $this->selectedPengumuman = null;
     }
 
     public function render()
