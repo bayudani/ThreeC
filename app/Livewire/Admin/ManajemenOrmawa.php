@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use App\Models\Ormawa;
+use App\Models\Fakultas;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -35,7 +36,7 @@ class ManajemenOrmawa extends Component
     public $editId = null;
     public $nama;
     public $kategori;
-    public $fakultas;
+    public $fakultas_id;
     public $periode;
     public $logo;
     public $existingLogo;
@@ -45,13 +46,22 @@ class ManajemenOrmawa extends Component
 
     protected function rules()
     {
-        return [
+        $rules = [
             'nama' => ['required', 'string', 'max:255', Rule::unique('ormawas', 'nama')->ignore($this->editId)],
             'kategori' => 'required|string|max:50',
-            'fakultas' => 'nullable|string|max:255',
-            'periode' => 'nullable|string|max:50',
             'logo' => 'nullable|image|max:2048',
         ];
+
+        // UKM: fakultas auto (Universitas), periode optional
+        if ($this->pageType === 'ukm' || $this->kategori === 'UKM') {
+            $rules['periode'] = 'nullable|string|max:50';
+        } else {
+            // Ormawa: fakultas & periode required
+            $rules['fakultas_id'] = 'required|exists:fakultas,id';
+            $rules['periode'] = 'required|string|max:50';
+        }
+
+        return $rules;
     }
 
     public function updatingSearch()
@@ -75,17 +85,20 @@ class ManajemenOrmawa extends Component
         $this->resetForm();
         if ($this->pageType === 'ukm') {
             $this->kategori = 'UKM';
+            // UKM auto ke fakultas Universitas
+            $universitas = Fakultas::where('kode', 'UNSERA')->first();
+            $this->fakultas_id = $universitas?->id;
         }
         $this->showForm = true;
     }
 
     public function edit($id)
     {
-        $ormawa = Ormawa::findOrFail($id);
+        $ormawa = Ormawa::with('fakultas')->findOrFail($id);
         $this->editId = $ormawa->id;
         $this->nama = $ormawa->nama;
         $this->kategori = $ormawa->kategori;
-        $this->fakultas = $ormawa->fakultas;
+        $this->fakultas_id = $ormawa->fakultas_id;
         $this->periode = $ormawa->periode;
         $this->existingLogo = $ormawa->logo;
         $this->logo = null;
@@ -99,9 +112,16 @@ class ManajemenOrmawa extends Component
         $data = [
             'nama' => $this->nama,
             'kategori' => $this->kategori,
-            'fakultas' => $this->fakultas,
             'periode' => $this->periode,
         ];
+
+        // UKM: fakultas auto ke Universitas
+        if ($this->kategori === 'UKM') {
+            $universitas = Fakultas::where('kode', 'UNSERA')->first();
+            $data['fakultas_id'] = $universitas?->id;
+        } else {
+            $data['fakultas_id'] = $this->fakultas_id;
+        }
 
         if ($this->logo) {
             if ($this->editId && $this->existingLogo) {
@@ -183,7 +203,7 @@ class ManajemenOrmawa extends Component
         $this->editId = null;
         $this->nama = null;
         $this->kategori = null;
-        $this->fakultas = null;
+        $this->fakultas_id = null;
         $this->periode = null;
         $this->logo = null;
         $this->existingLogo = null;
@@ -192,13 +212,21 @@ class ManajemenOrmawa extends Component
 
     public function render()
     {
+        $fakultasList = Fakultas::where('is_active', true)->orderBy('nama')->get();
+        
+        // Dropdown periode: 10 tahun (2024-2025 s/d 2034-2035)
+        $periodeList = [];
+        for ($year = 2024; $year <= 2034; $year++) {
+            $periodeList[] = $year . '-' . ($year + 1);
+        }
+
         if ($this->pageType === 'ukm') {
-            $query = Ormawa::query()
+            $query = Ormawa::with('fakultas')
                 ->where('kategori', 'UKM')
                 ->when($this->search, function ($q) {
                     $q->where(function ($sub) {
                         $sub->where('nama', 'like', '%' . $this->search . '%')
-                            ->orWhere('fakultas', 'like', '%' . $this->search . '%');
+                            ->orWhereHas('fakultas', fn($fq) => $fq->where('nama', 'like', '%' . $this->search . '%'));
                     });
                 });
 
@@ -208,15 +236,14 @@ class ManajemenOrmawa extends Component
                 'total' => Ormawa::where('kategori', 'UKM')->count(),
                 'legislatif' => 0,
                 'eksekutif' => 0,
-                'ukm' => Ormawa::where('kategori', 'UKM')->count(),
             ];
         } else {
-            $query = Ormawa::query()
-                ->whereIn('kategori', ['Legislatif', 'Eksekutif'])
+            $query = Ormawa::with('fakultas')
+                ->where('kategori', '!=', 'UKM')
                 ->when($this->search, function ($q) {
                     $q->where(function ($sub) {
                         $sub->where('nama', 'like', '%' . $this->search . '%')
-                            ->orWhere('fakultas', 'like', '%' . $this->search . '%');
+                            ->orWhereHas('fakultas', fn($fq) => $fq->where('nama', 'like', '%' . $this->search . '%'));
                     });
                 })
                 ->when($this->filterKategori, function ($q) {
@@ -226,17 +253,17 @@ class ManajemenOrmawa extends Component
             $ormawas = $query->with('users')->latest()->paginate(11);
 
             $stats = [
-                'total' => Ormawa::whereIn('kategori', ['Legislatif', 'Eksekutif'])->count(),
+                'total' => Ormawa::where('kategori', '!=', 'UKM')->count(),
                 'legislatif' => Ormawa::where('kategori', 'Legislatif')->count(),
                 'eksekutif' => Ormawa::where('kategori', 'Eksekutif')->count(),
-                'ukm' => 0,
             ];
         }
 
         return view('livewire.admin.manajemen-ormawa', [
             'ormawas' => $ormawas,
             'stats' => $stats,
-            'pageType' => $this->pageType,
+            'fakultasList' => $fakultasList,
+            'periodeList' => $periodeList,
         ]);
     }
 }

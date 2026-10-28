@@ -124,7 +124,7 @@
 
                     <div class="p-5 flex-1 flex flex-col">
                         <h3 class="text-base font-bold text-slate-800 line-clamp-1" title="{{ $ormawa->nama }}">{{ $ormawa->nama }}</h3>
-                        <p class="text-sm text-slate-500 mt-0.5">{{ $ormawa->fakultas ?? 'Universitas' }}</p>
+                        <p class="text-sm text-slate-500 mt-0.5">{{ $ormawa->fakultas?->nama ?? 'Universitas' }}</p>
 
                         <div class="mt-4 flex items-center gap-3">
                             <div class="flex items-center gap-1.5 text-xs text-slate-400">
@@ -204,8 +204,8 @@
                                         {{ $ormawa->kategori }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-slate-600">{{ $ormawa->fakultas ?? 'Universitas' }}</td>
-                                <td class="px-6 py-4 text-slate-600">{{ $ormawa->periode ?? '2024-2025' }}</td>
+                                <td class="px-6 py-4 text-slate-600">{{ $ormawa->fakultas?->nama ?? 'Universitas' }}</td>
+                                <td class="px-6 py-4 text-slate-600">{{ $ormawa->periode ?? '-' }}</td>
                                 <td class="px-6 py-4" x-data="{ show: false }">
                                     <div class="flex items-center gap-2">
                                         <span class="text-sm font-mono {{ $ormawa->admin_password === '-' ? 'text-slate-400' : 'text-slate-700' }}">
@@ -299,14 +299,33 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Fakultas</label>
-                            <input wire:model="fakultas" type="text" class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm px-3 py-2.5" placeholder="Contoh: FTI">
-                            @error('fakultas') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Periode</label>
-                            <input wire:model="periode" type="text" class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm px-3 py-2.5" placeholder="2024-2025">
+                        @if($pageType !== 'ukm' && $kategori !== 'UKM')
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Fakultas <span class="text-red-500">*</span></label>
+                                <select wire:model="fakultas_id" class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm px-3 py-2.5">
+                                    <option value="">Pilih fakultas</option>
+                                    @foreach($fakultasList as $f)
+                                        <option value="{{ $f->id }}">{{ $f->nama }} ({{ $f->kode }})</option>
+                                    @endforeach
+                                </select>
+                                @error('fakultas_id') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
+                            </div>
+                        @endif
+                        <div class="{{ $pageType === 'ukm' || $kategori === 'UKM' ? 'col-span-2' : '' }}">
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                                Periode
+                                @if($pageType !== 'ukm' && $kategori !== 'UKM')
+                                    <span class="text-red-500">*</span>
+                                @else
+                                    <span class="text-slate-400 text-xs">(opsional)</span>
+                                @endif
+                            </label>
+                            <select wire:model="periode" class="w-full border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm px-3 py-2.5">
+                                <option value="">Pilih periode</option>
+                                @foreach($periodeList as $p)
+                                    <option value="{{ $p }}">{{ $p }}</option>
+                                @endforeach
+                            </select>
                             @error('periode') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
                         </div>
                     </div>
