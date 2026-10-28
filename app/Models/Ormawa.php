@@ -4,10 +4,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Appends;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
-#[Fillable(['nama', 'kategori', 'fakultas', 'periode', 'logo'])]
+#[Fillable(['nama', 'kategori', 'fakultas', 'fakultas_id', 'periode', 'logo'])]
 #[Appends('admin_password')]
 class Ormawa extends Model
 {
@@ -17,6 +18,10 @@ class Ormawa extends Model
 
     public function prokers(): HasMany {
         return $this->hasMany(Proker::class);
+    }
+
+    public function fakultas(): BelongsTo {
+        return $this->belongsTo(Fakultas::class);
     }
 
     public function logoUrl(): string
