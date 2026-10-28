@@ -22,7 +22,7 @@
 - [ ] **B1.2** - Modal/detail page untuk lihat proker lengkap saat approve/reject
 
 ### B2. Halaman Evaluasi
-- [ ] **B2.1** - Rename "Evaluasi & Monev" → "Monitoring" di sidebar & header
+- [x] **B2.1** - Rename "Evaluasi & Monev" → "Monitoring" di sidebar & header
 
 ### B3. Halaman Manajemen Ormawa/UKM
 - [ ] **B3.1** - Dropdown fakultas (dari tabel `fakultas`)
@@ -32,12 +32,12 @@
 - [ ] **B3.5** - Validasi deskripsi proker wajib diisi
 
 ### B4. CRUD Fakultas (New)
-- [ ] **B4.1** - Halaman `/admin/fakultas` - list, tambah, edit, hapus fakultas
-- [ ] **B4.2** - Route & menu sidebar
+- [x] **B4.1** - Halaman `/admin/fakultas` - list, tambah, edit, hapus fakultas
+- [x] **B4.2** - Route & menu sidebar
 
 ### B5. CRUD Kontak Admin (New)
-- [ ] **B5.1** - Halaman `/admin/kontak` - list, tambah, edit, hapus kontak (email, WA, IG, dll)
-- [ ] **B5.2** - Route & menu sidebar
+- [x] **B5.1** - Halaman `/admin/kontak` - list, tambah, edit, hapus kontak (email, WA, IG, dll)
+- [x] **B5.2** - Route & menu sidebar
 
 ### B6. Detail Proker
 - [ ] **B6.1** - Tampilkan tahapan saat ini di detail proker
@@ -83,7 +83,7 @@
 
 ## Progress Summary
 - **Total:** 36 tasks
-- **Done:** 6 tasks (16.7%)
-- **Remaining:** 30 tasks
+- **Done:** 11 tasks (30.6%)
+- **Remaining:** 25 tasks
 
-**Last Updated:** 2026-10-28 13:37 WIB
+**Last Updated:** 2026-10-28 13:44 WIB

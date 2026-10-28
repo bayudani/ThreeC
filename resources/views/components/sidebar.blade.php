@@ -21,12 +21,18 @@
             'active' => $route === 'admin.ukm',
             'admin_only' => true,
         ],
+        'Data Fakultas' => [
+            'route' => 'admin.fakultas',
+            'icon' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>',
+            'active' => $route === 'admin.fakultas',
+            'admin_only' => true,
+        ],
         'Program Kerja' => [
             'route' => $isAdmin ? 'admin.proker' : 'ormawa.proker',
             'icon' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>',
             'active' => str_contains($route ?? '', 'proker') && !str_contains($route ?? '', 'laporan'),
         ],
-        'Monev & Evaluasi' => [
+        'Monitoring' => [
             'route' => 'admin.evaluasi',
             'icon' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>',
             'active' => str_contains($route ?? '', 'evaluasi'),
@@ -42,6 +48,12 @@
             'route' => 'admin.pengumuman',
             'icon' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h5m5 0h5a2 2 0 002-2V7a2 2 0 00-2-2h-5m0 0L9 5m5 0l-5 0"></path></svg>',
             'active' => str_contains($route ?? '', 'pengumuman'),
+            'admin_only' => true,
+        ],
+        'Kontak Admin' => [
+            'route' => 'admin.kontak',
+            'icon' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>',
+            'active' => str_contains($route ?? '', 'kontak'),
             'admin_only' => true,
         ],
     ];

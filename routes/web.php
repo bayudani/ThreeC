@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\ManajemenOrmawa;
+use App\Livewire\Admin\ManajemenFakultas;
+use App\Livewire\Admin\ManajemenKontak;
 use App\Livewire\Admin\ProgramKerja;
 use App\Livewire\Admin\ProkerDetail;
 use App\Livewire\Admin\Laporan;
@@ -48,6 +50,8 @@ Route::prefix('admin')
         Route::get('/dashboard', AdminDashboard::class)->name('admin.dashboard');
         Route::get('/ormawa', ManajemenOrmawa::class)->name('admin.ormawa');
         Route::get('/ukm', ManajemenOrmawa::class)->name('admin.ukm');
+        Route::get('/fakultas', ManajemenFakultas::class)->name('admin.fakultas');
+        Route::get('/kontak', ManajemenKontak::class)->name('admin.kontak');
         Route::get('/proker', ProgramKerja::class)->name('admin.proker');
         Route::get('/proker/{id}', ProkerDetail::class)->name('admin.proker.detail');
         Route::get('/laporan', Laporan::class)->name('admin.laporan');
