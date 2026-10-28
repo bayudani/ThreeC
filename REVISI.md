@@ -29,7 +29,7 @@
 - [x] **B3.2** - Dropdown periode (2024-2025 s/d 2034-2035, hardcode)
 - [x] **B3.3** - Semua field required (nama, kategori, fakultas, periode)
 - [x] **B3.4** - Form UKM: fakultas auto-hide (set ke "Universitas"), periode opsional
-- [ ] **B3.5** - Validasi deskripsi proker wajib diisi
+- [x] **B3.5** - Validasi deskripsi proker wajib diisi
 
 ### B4. CRUD Fakultas (New)
 - [x] **B4.1** - Halaman `/admin/fakultas` - list, tambah, edit, hapus fakultas
@@ -48,19 +48,19 @@
 ## C. Web Ormawa
 
 ### C1. Dashboard
-- [ ] **C1.1** - Tampilkan badge status approval (Menunggu/Ditolak/Berjalan/Selesai) di card proker
-- [ ] **C1.2** - Badge "Ditolak" untuk proker yang rejected (bukan "Belum Dimulai")
-- [ ] **C1.3** - Progress bar auto dari tahapan
+- [x] **C1.1** - Tampilkan badge status approval (Menunggu/Ditolak/Berjalan/Selesai) di card proker
+- [x] **C1.2** - Badge "Ditolak" untuk proker yang rejected (bukan "Belum Dimulai")
+- [x] **C1.3** - Progress bar auto dari tahapan
 
 ### C2. Pengumuman
 - [ ] **C2.1** - Card pengumuman bisa diklik → modal popup untuk baca isi lengkap
 
 ### C3. Program Kerja
 - [ ] **C3.1** - List proker langsung tampil penuh (tidak perlu klik "Lihat Semua")
-- [ ] **C3.2** - Form tambah/edit proker: deskripsi wajib diisi (validation)
-- [ ] **C3.3** - Tanggal proker hanya bisa pilih >= hari ini (date picker min=today)
-- [ ] **C3.4** - Dropdown tahapan (5 fase) untuk update progress
-- [ ] **C3.5** - Progress & status auto dari tahapan (read-only display)
+- [x] **C3.2** - Form tambah/edit proker: deskripsi wajib diisi (validation)
+- [x] **C3.3** - Tanggal proker hanya bisa pilih >= hari ini (date picker min=today)
+- [x] **C3.4** - Dropdown tahapan (5 fase) untuk update progress
+- [x] **C3.5** - Progress & status auto dari tahapan (read-only display)
 
 ### C4. Detail Proker
 - [ ] **C4.1** - Tampilkan tahapan saat ini
@@ -83,7 +83,7 @@
 
 ## Progress Summary
 - **Total:** 36 tasks
-- **Done:** 15 tasks (41.7%)
-- **Remaining:** 21 tasks
+- **Done:** 21 tasks (58.3%)
+- **Remaining:** 15 tasks
 
-**Last Updated:** 2026-10-28 13:50 WIB
+**Last Updated:** 2026-10-28 14:10 WIB
