@@ -227,16 +227,16 @@
         {{ $prokers->links(data: ['scrollTo' => false]) }}
     </div>
 
-    {{-- Modal Update Progress --}}
+    {{-- Modal Update Tahapan --}}
     @if($isProgressModalOpen)
         <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" wire:key="progress-modal">
             <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200">
                 <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
                     <div class="flex items-center gap-2">
                         <div class="w-7 h-7 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                         </div>
-                        <h3 class="text-base font-bold text-slate-800">Update Progress</h3>
+                        <h3 class="text-base font-bold text-slate-800">Update Tahapan Proker</h3>
                     </div>
                     <button wire:click="closeProgressModal" class="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -244,32 +244,25 @@
                 </div>
                 <form wire:submit.prevent="updateProgress" class="p-6 space-y-5">
                     <div>
-                        <label class="block mb-3 text-sm font-semibold text-slate-700">
-                            Persentase Penyelesaian: <span class="text-blue-600">{{ $progress }}%</span>
-                        </label>
-                        <input wire:model.live="progress" type="range" min="0" max="100" class="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer accent-blue-600">
-                        <div class="flex justify-between text-xs text-slate-400 mt-1.5">
-                            <span>0%</span>
-                            <span>50%</span>
-                            <span>100%</span>
-                        </div>
-                        @error('progress') <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
-                    </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-semibold text-slate-700">Status Saat Ini</label>
-                        <select wire:model="status" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block w-full p-2.5 transition-all">
-                            <option value="belum_dimulai">Belum Dimulai</option>
-                            <option value="berjalan">Sedang Berjalan</option>
-                            <option value="selesai">Selesai</option>
+                        <label class="block mb-2 text-sm font-semibold text-slate-700">Tahapan Saat Ini</label>
+                        <select wire:model="tahapan_saat_ini" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block w-full p-2.5 transition-all">
+                            <option value="perencanaan">Perencanaan (20%)</option>
+                            <option value="persiapan">Persiapan (40%)</option>
+                            <option value="pelaksanaan">Pelaksanaan (60%)</option>
+                            <option value="evaluasi">Evaluasi (80%)</option>
+                            <option value="selesai">Selesai (100%)</option>
                         </select>
-                        @error('status') <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
+                        @error('tahapan_saat_ini') <span class="text-red-500 text-xs mt-1.5 block font-medium">{{ $message }}</span> @enderror
+                        <p class="text-xs text-slate-400 mt-2">Progress otomatis disesuaikan dari tahapan yang dipilih</p>
                     </div>
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
                         <button type="button" wire:click="closeProgressModal" class="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-all">
                             Batal
                         </button>
-                        <button type="submit" wire:loading.attr="disabled" class="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.97] rounded-lg transition-all shadow-sm">
-                            Simpan Perubahan
+                        <button type="submit" wire:loading.attr="disabled" class="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.97] rounded-lg transition-all shadow-sm disabled:opacity-50 inline-flex items-center gap-2">
+                            <svg wire:loading wire:target="updateProgress" style="display: none;" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                            <span wire:loading.remove wire:target="updateProgress">Simpan Perubahan</span>
+                            <span wire:loading wire:target="updateProgress" style="display: none;">Menyimpan...</span>
                         </button>
                     </div>
                 </form>

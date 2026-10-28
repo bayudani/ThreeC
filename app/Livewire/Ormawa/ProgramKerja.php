@@ -21,8 +21,7 @@ class ProgramKerja extends Component
     // State untuk Modal Update Progress
     public $isProgressModalOpen = false;
     public $proker_id;
-    public $progress = 0;
-    public $status = 'belum_dimulai';
+    public $tahapan_saat_ini;
 
     // State untuk Modal Upload Dokumentasi
     public $isDokumenModalOpen = false;
@@ -69,6 +68,7 @@ class ProgramKerja extends Component
             'nama_proker' => $this->nama_proker,
             'deskripsi' => $this->deskripsi,
             'target_waktu' => $this->target_waktu,
+            'tahapan_saat_ini' => 'perencanaan',
             'status' => 'belum_dimulai',
             'progress' => 0,
             'validated_at' => null,
@@ -79,8 +79,10 @@ class ProgramKerja extends Component
     }
 
     // ==========================================
-    // LOGIKA PROGRESS
+    // LOGIKA PROGRESS (UPDATE TAHAPAN)
     // ==========================================
+    public $tahapan_saat_ini;
+
     public function openProgressModal($id)
     {
         $proker = Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($id);
@@ -93,37 +95,32 @@ class ProgramKerja extends Component
             return;
         }
         $this->proker_id = $proker->id;
-        $this->progress = $proker->progress;
-        $this->status = $proker->status;
+        $this->tahapan_saat_ini = $proker->tahapan_saat_ini;
         $this->isProgressModalOpen = true;
     }
 
     public function closeProgressModal()
     {
         $this->isProgressModalOpen = false;
-        $this->reset(['proker_id', 'progress', 'status']);
+        $this->reset(['proker_id', 'tahapan_saat_ini']);
     }
 
     public function updateProgress()
     {
         $this->validate([
-            'progress' => 'required|numeric|min:0|max:100',
-            'status' => 'required|in:belum_dimulai,berjalan,selesai'
+            'tahapan_saat_ini' => 'required|in:perencanaan,persiapan,pelaksanaan,evaluasi,selesai'
         ]);
 
         $proker = Proker::where('ormawa_id', Auth::user()->ormawa_id)->findOrFail($this->proker_id);
         
-        // Auto-adjust status berdasarkan progress (opsional UX)
-        if ($this->progress == 100) $this->status = 'selesai';
-        if ($this->progress > 0 && $this->progress < 100 && $this->status == 'belum_dimulai') $this->status = 'berjalan';
-
         $proker->update([
-            'progress' => $this->progress,
-            'status' => $this->status
+            'tahapan_saat_ini' => $this->tahapan_saat_ini,
+            'progress' => $proker->computed_progress,
+            'status' => $proker->computed_status,
         ]);
 
         $this->closeProgressModal();
-        session()->flash('success', 'Progress program kerja berhasil diperbarui!');
+        session()->flash('success', 'Tahapan program kerja berhasil diperbarui!');
     }
 
     // ==========================================
