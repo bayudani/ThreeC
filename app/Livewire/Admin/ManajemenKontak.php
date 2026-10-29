@@ -3,112 +3,83 @@
 namespace App\Livewire\Admin;
 
 use App\Models\KontakAdmin;
-use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
 class ManajemenKontak extends Component
 {
-    use WithPagination;
+    // Satu input per jenis kontak
+    public $email = '';
+    public $whatsapp = '';
+    public $instagram = '';
+    public $tiktok = '';
+    public $telepon = '';
+    public $website = '';
 
-    public $showForm = false;
-    public $editId = null;
-    public $confirmDeleteId = null;
+    // Urutan tampil di footer (kecil = lebih dulu)
+    public array $urutanMap = [
+        'email' => 1,
+        'whatsapp' => 2,
+        'instagram' => 3,
+        'tiktok' => 4,
+        'telepon' => 5,
+        'website' => 6,
+    ];
 
-    public $label;
-    public $value;
-    public $icon;
-    public $urutan = 0;
-    public $is_active = true;
+    public array $labelMap = [
+        'email' => 'Email',
+        'whatsapp' => 'WhatsApp',
+        'instagram' => 'Instagram',
+        'tiktok' => 'TikTok',
+        'telepon' => 'Telepon',
+        'website' => 'Website',
+    ];
 
-    public function openModal($id = null)
+    public function mount()
     {
-        $this->resetValidation();
-        $this->editId = $id;
-
-        if ($id) {
-            $kontak = KontakAdmin::findOrFail($id);
-            $this->label = $kontak->label;
-            $this->value = $kontak->value;
-            $this->icon = $kontak->icon;
-            $this->urutan = $kontak->urutan;
-            $this->is_active = $kontak->is_active;
-        } else {
-            $this->reset(['label', 'value', 'icon']);
-            $this->urutan = KontakAdmin::max('urutan') + 1;
-            $this->is_active = true;
+        foreach (array_keys($this->labelMap) as $jenis) {
+            $kontak = KontakAdmin::where('icon', $jenis)->first();
+            $this->{$jenis} = $kontak?->value ?? '';
         }
-
-        $this->showForm = true;
     }
 
     public function save()
     {
         $this->validate([
-            'label' => 'required|string|max:50',
-            'value' => 'required|string|max:255',
-            'icon' => 'nullable|string|max:50',
-            'urutan' => 'required|integer|min:0',
-            'is_active' => 'boolean',
+            'email' => 'nullable|email|max:255',
+            'whatsapp' => 'nullable|string|max:20',
+            'instagram' => 'nullable|string|max:50',
+            'tiktok' => 'nullable|string|max:50',
+            'telepon' => 'nullable|string|max:30',
+            'website' => 'nullable|url|max:255',
         ]);
 
-        if ($this->editId) {
-            KontakAdmin::findOrFail($this->editId)->update([
-                'label' => $this->label,
-                'value' => $this->value,
-                'icon' => $this->icon,
-                'urutan' => $this->urutan,
-                'is_active' => $this->is_active,
-            ]);
-            session()->flash('success', 'Kontak berhasil diperbarui.');
-        } else {
-            KontakAdmin::create([
-                'label' => $this->label,
-                'value' => $this->value,
-                'icon' => $this->icon,
-                'urutan' => $this->urutan,
-                'is_active' => $this->is_active,
-            ]);
-            session()->flash('success', 'Kontak berhasil ditambahkan.');
+        foreach (array_keys($this->labelMap) as $jenis) {
+            $value = trim($this->{$jenis});
+
+            if ($value === '') {
+                // Kosong = hapus dari tampilan
+                KontakAdmin::where('icon', $jenis)->delete();
+                continue;
+            }
+
+            KontakAdmin::updateOrCreate(
+                ['icon' => $jenis],
+                [
+                    'label' => $this->labelMap[$jenis],
+                    'value' => $value,
+                    'urutan' => $this->urutanMap[$jenis],
+                    'is_active' => true,
+                ]
+            );
         }
 
-        $this->batal();
-    }
-
-    public function confirmDelete($id)
-    {
-        $this->confirmDeleteId = $id;
-    }
-
-    public function delete()
-    {
-        KontakAdmin::findOrFail($this->confirmDeleteId)->delete();
-        session()->flash('success', 'Kontak berhasil dihapus.');
-        $this->confirmDeleteId = null;
-    }
-
-    public function batal()
-    {
-        $this->showForm = false;
-        $this->editId = null;
-        $this->reset(['label', 'value', 'icon']);
-        $this->urutan = 0;
-        $this->is_active = true;
-    }
-
-    public function batalHapus()
-    {
-        $this->confirmDeleteId = null;
+        session()->flash('success', 'Kontak berhasil disimpan.');
     }
 
     public function render()
     {
-        $kontaks = KontakAdmin::orderBy('urutan')->paginate(10);
-
-        return view('livewire.admin.manajemen-kontak', [
-            'kontaks' => $kontaks,
-        ]);
+        return view('livewire.admin.manajemen-kontak');
     }
 }

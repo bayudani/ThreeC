@@ -60,7 +60,15 @@ class ProgramKerja extends Component
 
     public function simpanProker()
     {
-        $this->validate();
+        // Validasi hanya field milik modal "Buat Proker".
+        // Tidak boleh pakai $this->validate() tanpa argumen, karena akan
+        // ikut memvalidasi $file_bukti & $keterangan_file (milik modal
+        // Upload Bukti) yang pasti kosong saat menambah proker.
+        $this->validate([
+            'nama_proker'  => 'required|min:5',
+            'deskripsi'    => 'required|string|min:10',
+            'target_waktu' => 'required|date|after_or_equal:today',
+        ]);
 
         Proker::create([
             'ormawa_id' => Auth::user()->ormawa_id,

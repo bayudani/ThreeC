@@ -35,7 +35,8 @@ class TopbarSearch extends Component
                     'type' => 'Ormawa',
                     'label' => $o->nama,
                     'sub' => $o->kategori,
-                    'url' => route('admin.ormawa'),
+                    // Path relatif biar redirect tetap di host yang sama
+                    'path' => '/admin/ormawa',
                 ]);
         }
 
@@ -48,26 +49,34 @@ class TopbarSearch extends Component
                 'type' => 'Proker',
                 'label' => $p->nama_proker,
                 'sub' => $p->ormawa?->nama ?? '-',
-                'url' => $isAdmin
-                    ? route('admin.proker.detail', $p->id)
-                    : route('ormawa.proker.detail', $p->id),
+                'path' => $isAdmin
+                    ? '/admin/proker/' . $p->id
+                    : '/ormawa/proker/' . $p->id,
             ]);
 
         $this->results = $ormawas->concat($prokers)->take(7)->values()->all();
         $this->showDropdown = count($this->results) > 0;
     }
 
-    public function selectResult($url)
+    public function selectResult($path)
     {
-        // Hanya izinkan redirect ke URL internal aplikasi (cegah open redirect)
-        if (!str_starts_with($url, url('/'))) {
+        // Hanya izinkan path internal aplikasi (cegah open redirect).
+        // Wajib diawali '/', tapi bukan '//' (protocol-relative) atau '\'.
+        if (!is_string($path) || !str_starts_with($path, '/') || str_starts_with($path, '//') || str_contains($path, '\\')) {
             return;
         }
 
         $this->query = '';
         $this->results = [];
         $this->showDropdown = false;
-        $this->redirect($url);
+        $this->redirect($path);
+    }
+
+    public function closeResults()
+    {
+        // Query dipertahankan supaya mengetik lagi langsung muncul hasilnya
+        $this->results = [];
+        $this->showDropdown = false;
     }
 
     public function render()
